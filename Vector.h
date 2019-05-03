@@ -72,7 +72,7 @@ namespace TLib
                                                   FVector3<Scalar> pc,
                                                   FVector2<Scalar> ta,
                                                   FVector2<Scalar> tb,
-                                                  FVector2<Scalar> tc)
+                                                  FVector2<Scalar> tc )
       {
          auto area = Area( pa, pb, pc );
          if ( area != 0.0f )

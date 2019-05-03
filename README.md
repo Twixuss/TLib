@@ -1,2 +1,2 @@
 # TLib
-Vector math library
+Vector math and other stuff library

@@ -36,19 +36,16 @@ namespace TLib::Math
    template<class T>
    [[nodiscard]] constexpr T Max( const T& a, const T& b )
    {
-
       return a > b ? a : b;
    }
    template<class T>
    [[nodiscard]] constexpr T Min( const T& a, const T& b )
    {
-
       return a < b ? a : b;
    }
    template<class T>
    [[nodiscard]] constexpr T Clamp( const T& t, const T& min, const T& max )
    {
-
       return t < min ? min : t > max ? max : t;
    }
 }
