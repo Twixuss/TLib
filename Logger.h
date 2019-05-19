@@ -1,242 +1,240 @@
-#ifndef _TLIB_LOGGER_H
-#define _TLIB_LOGGER_H
+#ifndef _TL_LOGGER_H
+#define _TL_LOGGER_H
+
+#include "Attributes.h"
 
 #include <iostream>
 
-#include "attributes.h"
-
-#define TPRINT(...) TLib::Logger::PrintImpl(__VA_ARGS__)
-#define TPRINTLN(...) TLib::Logger::PrintImpl(__VA_ARGS__, '\n')
-#define TPRINTSRCPOS() \
-TLib::Logger::PrintImpl(\
-"File: " TL_STRINGA(__FILE__) \
-"\nLine: " TL_STRINGA(__LINE__) \
-"\nFunction: " __FUNCTION__ "\n")
 namespace TLib::Logger
 {
-   struct WinMsg
-   {
-      WinMsg(UINT msg) : msg(msg)
-      {
-      }
-      UINT msg;
-   };
-   struct HResult
-   {
-      HResult(HRESULT msg) : hr(msg)
-      {
-      }
-      HRESULT hr;
-   };
-
    template<typename T>
-   inline void PrintImpl(T t)
+   inline void Print(const T& t)
    {
       std::cout << t;
    }
-   template<>
-   inline void PrintImpl(WinMsg msg)
-   {
-#define REGISTER_MESSAGE(m) case m:PrintImpl(#m);break
-      switch (msg.msg)
-      {
-         REGISTER_MESSAGE(WM_CREATE);
-         REGISTER_MESSAGE(WM_DESTROY);
-         REGISTER_MESSAGE(WM_MOVE);
-         REGISTER_MESSAGE(WM_SIZE);
-         REGISTER_MESSAGE(WM_ACTIVATE);
-         REGISTER_MESSAGE(WM_SETFOCUS);
-         REGISTER_MESSAGE(WM_KILLFOCUS);
-         REGISTER_MESSAGE(WM_ENABLE);
-         REGISTER_MESSAGE(WM_SETREDRAW);
-         REGISTER_MESSAGE(WM_SETTEXT);
-         REGISTER_MESSAGE(WM_GETTEXT);
-         REGISTER_MESSAGE(WM_GETTEXTLENGTH);
-         REGISTER_MESSAGE(WM_PAINT);
-         REGISTER_MESSAGE(WM_CLOSE);
-         REGISTER_MESSAGE(WM_QUERYENDSESSION);
-         REGISTER_MESSAGE(WM_QUIT);
-         REGISTER_MESSAGE(WM_QUERYOPEN);
-         REGISTER_MESSAGE(WM_ERASEBKGND);
-         REGISTER_MESSAGE(WM_SYSCOLORCHANGE);
-         REGISTER_MESSAGE(WM_ENDSESSION);
-         REGISTER_MESSAGE(WM_SHOWWINDOW);
-         REGISTER_MESSAGE(WM_CTLCOLORMSGBOX);
-         REGISTER_MESSAGE(WM_CTLCOLOREDIT);
-         REGISTER_MESSAGE(WM_CTLCOLORLISTBOX);
-         REGISTER_MESSAGE(WM_CTLCOLORBTN);
-         REGISTER_MESSAGE(WM_CTLCOLORDLG);
-         REGISTER_MESSAGE(WM_CTLCOLORSCROLLBAR);
-         REGISTER_MESSAGE(WM_CTLCOLORSTATIC);
-         REGISTER_MESSAGE(WM_WININICHANGE);
-         REGISTER_MESSAGE(WM_DEVMODECHANGE);
-         REGISTER_MESSAGE(WM_ACTIVATEAPP);
-         REGISTER_MESSAGE(WM_FONTCHANGE);
-         REGISTER_MESSAGE(WM_TIMECHANGE);
-         REGISTER_MESSAGE(WM_CANCELMODE);
-         REGISTER_MESSAGE(WM_SETCURSOR);
-         REGISTER_MESSAGE(WM_MOUSEACTIVATE);
-         REGISTER_MESSAGE(WM_CHILDACTIVATE);
-         REGISTER_MESSAGE(WM_QUEUESYNC);
-         REGISTER_MESSAGE(WM_GETMINMAXINFO);
-         REGISTER_MESSAGE(WM_ICONERASEBKGND);
-         REGISTER_MESSAGE(WM_NEXTDLGCTL);
-         REGISTER_MESSAGE(WM_SPOOLERSTATUS);
-         REGISTER_MESSAGE(WM_DRAWITEM);
-         REGISTER_MESSAGE(WM_MEASUREITEM);
-         REGISTER_MESSAGE(WM_DELETEITEM);
-         REGISTER_MESSAGE(WM_VKEYTOITEM);
-         REGISTER_MESSAGE(WM_CHARTOITEM);
-         REGISTER_MESSAGE(WM_SETFONT);
-         REGISTER_MESSAGE(WM_GETFONT);
-         REGISTER_MESSAGE(WM_QUERYDRAGICON);
-         REGISTER_MESSAGE(WM_COMPAREITEM);
-         REGISTER_MESSAGE(WM_COMPACTING);
-         REGISTER_MESSAGE(WM_NCCREATE);
-         REGISTER_MESSAGE(WM_NCDESTROY);
-         REGISTER_MESSAGE(WM_NCCALCSIZE);
-         REGISTER_MESSAGE(WM_NCHITTEST);
-         REGISTER_MESSAGE(WM_NCPAINT);
-         REGISTER_MESSAGE(WM_NCACTIVATE);
-         REGISTER_MESSAGE(WM_GETDLGCODE);
-         REGISTER_MESSAGE(WM_NCMOUSEMOVE);
-         REGISTER_MESSAGE(WM_NCLBUTTONDOWN);
-         REGISTER_MESSAGE(WM_NCLBUTTONUP);
-         REGISTER_MESSAGE(WM_NCLBUTTONDBLCLK);
-         REGISTER_MESSAGE(WM_NCRBUTTONDOWN);
-         REGISTER_MESSAGE(WM_NCRBUTTONUP);
-         REGISTER_MESSAGE(WM_NCRBUTTONDBLCLK);
-         REGISTER_MESSAGE(WM_NCMBUTTONDOWN);
-         REGISTER_MESSAGE(WM_NCMBUTTONUP);
-         REGISTER_MESSAGE(WM_NCMBUTTONDBLCLK);
-         REGISTER_MESSAGE(WM_KEYDOWN);
-         REGISTER_MESSAGE(WM_KEYUP);
-         REGISTER_MESSAGE(WM_CHAR);
-         REGISTER_MESSAGE(WM_DEADCHAR);
-         REGISTER_MESSAGE(WM_SYSKEYDOWN);
-         REGISTER_MESSAGE(WM_SYSKEYUP);
-         REGISTER_MESSAGE(WM_SYSCHAR);
-         REGISTER_MESSAGE(WM_SYSDEADCHAR);
-         REGISTER_MESSAGE(WM_KEYLAST);
-         REGISTER_MESSAGE(WM_INITDIALOG);
-         REGISTER_MESSAGE(WM_COMMAND);
-         REGISTER_MESSAGE(WM_SYSCOMMAND);
-         REGISTER_MESSAGE(WM_TIMER);
-         REGISTER_MESSAGE(WM_HSCROLL);
-         REGISTER_MESSAGE(WM_VSCROLL);
-         REGISTER_MESSAGE(WM_INITMENU);
-         REGISTER_MESSAGE(WM_INITMENUPOPUP);
-         REGISTER_MESSAGE(WM_MENUSELECT);
-         REGISTER_MESSAGE(WM_MENUCHAR);
-         REGISTER_MESSAGE(WM_ENTERIDLE);
-         REGISTER_MESSAGE(WM_MOUSEWHEEL);
-         REGISTER_MESSAGE(WM_MOUSEMOVE);
-         REGISTER_MESSAGE(WM_LBUTTONDOWN);
-         REGISTER_MESSAGE(WM_LBUTTONUP);
-         REGISTER_MESSAGE(WM_LBUTTONDBLCLK);
-         REGISTER_MESSAGE(WM_RBUTTONDOWN);
-         REGISTER_MESSAGE(WM_RBUTTONUP);
-         REGISTER_MESSAGE(WM_RBUTTONDBLCLK);
-         REGISTER_MESSAGE(WM_MBUTTONDOWN);
-         REGISTER_MESSAGE(WM_MBUTTONUP);
-         REGISTER_MESSAGE(WM_MBUTTONDBLCLK);
-         REGISTER_MESSAGE(WM_PARENTNOTIFY);
-         REGISTER_MESSAGE(WM_MDICREATE);
-         REGISTER_MESSAGE(WM_MDIDESTROY);
-         REGISTER_MESSAGE(WM_MDIACTIVATE);
-         REGISTER_MESSAGE(WM_MDIRESTORE);
-         REGISTER_MESSAGE(WM_MDINEXT);
-         REGISTER_MESSAGE(WM_MDIMAXIMIZE);
-         REGISTER_MESSAGE(WM_MDITILE);
-         REGISTER_MESSAGE(WM_MDICASCADE);
-         REGISTER_MESSAGE(WM_MDIICONARRANGE);
-         REGISTER_MESSAGE(WM_MDIGETACTIVE);
-         REGISTER_MESSAGE(WM_MDISETMENU);
-         REGISTER_MESSAGE(WM_CUT);
-         REGISTER_MESSAGE(WM_COPYDATA);
-         REGISTER_MESSAGE(WM_COPY);
-         REGISTER_MESSAGE(WM_PASTE);
-         REGISTER_MESSAGE(WM_CLEAR);
-         REGISTER_MESSAGE(WM_UNDO);
-         REGISTER_MESSAGE(WM_RENDERFORMAT);
-         REGISTER_MESSAGE(WM_RENDERALLFORMATS);
-         REGISTER_MESSAGE(WM_DESTROYCLIPBOARD);
-         REGISTER_MESSAGE(WM_DRAWCLIPBOARD);
-         REGISTER_MESSAGE(WM_PAINTCLIPBOARD);
-         REGISTER_MESSAGE(WM_VSCROLLCLIPBOARD);
-         REGISTER_MESSAGE(WM_SIZECLIPBOARD);
-         REGISTER_MESSAGE(WM_ASKCBFORMATNAME);
-         REGISTER_MESSAGE(WM_CHANGECBCHAIN);
-         REGISTER_MESSAGE(WM_HSCROLLCLIPBOARD);
-         REGISTER_MESSAGE(WM_QUERYNEWPALETTE);
-         REGISTER_MESSAGE(WM_PALETTEISCHANGING);
-         REGISTER_MESSAGE(WM_PALETTECHANGED);
-         REGISTER_MESSAGE(WM_DROPFILES);
-         REGISTER_MESSAGE(WM_POWER);
-         REGISTER_MESSAGE(WM_WINDOWPOSCHANGED);
-         REGISTER_MESSAGE(WM_WINDOWPOSCHANGING);
-         REGISTER_MESSAGE(WM_HELP);
-         REGISTER_MESSAGE(WM_NOTIFY);
-         REGISTER_MESSAGE(WM_CONTEXTMENU);
-         REGISTER_MESSAGE(WM_TCARD);
-         REGISTER_MESSAGE(WM_MDIREFRESHMENU);
-         REGISTER_MESSAGE(WM_MOVING);
-         REGISTER_MESSAGE(WM_STYLECHANGED);
-         REGISTER_MESSAGE(WM_STYLECHANGING);
-         REGISTER_MESSAGE(WM_SIZING);
-         REGISTER_MESSAGE(WM_SETHOTKEY);
-         REGISTER_MESSAGE(WM_PRINT);
-         REGISTER_MESSAGE(WM_PRINTCLIENT);
-         REGISTER_MESSAGE(WM_POWERBROADCAST);
-         REGISTER_MESSAGE(WM_HOTKEY);
-         REGISTER_MESSAGE(WM_GETICON);
-         REGISTER_MESSAGE(WM_EXITMENULOOP);
-         REGISTER_MESSAGE(WM_ENTERMENULOOP);
-         REGISTER_MESSAGE(WM_DISPLAYCHANGE);
-         REGISTER_MESSAGE(WM_SETICON);
-         REGISTER_MESSAGE(WM_CAPTURECHANGED);
-         REGISTER_MESSAGE(WM_DEVICECHANGE);
-         REGISTER_MESSAGE(WM_IME_SETCONTEXT);
-         REGISTER_MESSAGE(WM_IME_NOTIFY);
-         REGISTER_MESSAGE(WM_NCMOUSELEAVE);
-         REGISTER_MESSAGE(WM_EXITSIZEMOVE);
-         REGISTER_MESSAGE(WM_DWMNCRENDERINGCHANGED);
-         REGISTER_MESSAGE(WM_ENTERSIZEMOVE);
-      default:PrintImpl(msg.msg);break;
-      }
-#undef REGISTER_MESSAGE
-   }
    template<typename T, typename ... R>
-   inline void PrintImpl(T t, R ...r)
+   inline void Print(const T& t, const R&... r)
    {
-      PrintImpl(t);
-      PrintImpl(r...);
+      Print(t);
+      Print(r...);
    }
-   template<>
-   inline void PrintImpl(HResult hr)
+#if TL_LOG_WINDOWS_TYPES
+   struct WinMsg
    {
-      if (FAILED(hr.hr))
+      unsigned value;
+      WinMsg(unsigned value) : value(value)
       {
-         TPRINT("HRESULT Failed: 0x", std::hex, std::uppercase, hr.hr, std::dec);
-         char* pMsgBuf;
-         DWORD nMsgLen = FormatMessageA(
-            FORMAT_MESSAGE_ALLOCATE_BUFFER |
-            FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-            nullptr, hr.hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-            (char*)&pMsgBuf, 0, nullptr
-         );
-         if (nMsgLen == 0)
+      }
+      template<class T>
+      friend std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, WinMsg msg)
+      {
+         switch (msg.value)
          {
-            TPRINTLN(". Unidentified error code");
+#define REGMSG(m) case m:os<<#m;break
+            REGMSG(WM_CREATE);
+            REGMSG(WM_DESTROY);
+            REGMSG(WM_MOVE);
+            REGMSG(WM_SIZE);
+            REGMSG(WM_ACTIVATE);
+            REGMSG(WM_SETFOCUS);
+            REGMSG(WM_KILLFOCUS);
+            REGMSG(WM_ENABLE);
+            REGMSG(WM_SETREDRAW);
+            REGMSG(WM_SETTEXT);
+            REGMSG(WM_GETTEXT);
+            REGMSG(WM_GETTEXTLENGTH);
+            REGMSG(WM_PAINT);
+            REGMSG(WM_CLOSE);
+            REGMSG(WM_QUERYENDSESSION);
+            REGMSG(WM_QUIT);
+            REGMSG(WM_QUERYOPEN);
+            REGMSG(WM_ERASEBKGND);
+            REGMSG(WM_SYSCOLORCHANGE);
+            REGMSG(WM_ENDSESSION);
+            REGMSG(WM_SHOWWINDOW);
+            REGMSG(WM_CTLCOLORMSGBOX);
+            REGMSG(WM_CTLCOLOREDIT);
+            REGMSG(WM_CTLCOLORLISTBOX);
+            REGMSG(WM_CTLCOLORBTN);
+            REGMSG(WM_CTLCOLORDLG);
+            REGMSG(WM_CTLCOLORSCROLLBAR);
+            REGMSG(WM_CTLCOLORSTATIC);
+            REGMSG(WM_WININICHANGE);
+            REGMSG(WM_DEVMODECHANGE);
+            REGMSG(WM_ACTIVATEAPP);
+            REGMSG(WM_FONTCHANGE);
+            REGMSG(WM_TIMECHANGE);
+            REGMSG(WM_CANCELMODE);
+            REGMSG(WM_SETCURSOR);
+            REGMSG(WM_MOUSEACTIVATE);
+            REGMSG(WM_CHILDACTIVATE);
+            REGMSG(WM_QUEUESYNC);
+            REGMSG(WM_GETMINMAXINFO);
+            REGMSG(WM_ICONERASEBKGND);
+            REGMSG(WM_NEXTDLGCTL);
+            REGMSG(WM_SPOOLERSTATUS);
+            REGMSG(WM_DRAWITEM);
+            REGMSG(WM_MEASUREITEM);
+            REGMSG(WM_DELETEITEM);
+            REGMSG(WM_VKEYTOITEM);
+            REGMSG(WM_CHARTOITEM);
+            REGMSG(WM_SETFONT);
+            REGMSG(WM_GETFONT);
+            REGMSG(WM_QUERYDRAGICON);
+            REGMSG(WM_COMPAREITEM);
+            REGMSG(WM_COMPACTING);
+            REGMSG(WM_NCCREATE);
+            REGMSG(WM_NCDESTROY);
+            REGMSG(WM_NCCALCSIZE);
+            REGMSG(WM_NCHITTEST);
+            REGMSG(WM_NCPAINT);
+            REGMSG(WM_NCACTIVATE);
+            REGMSG(WM_GETDLGCODE);
+            REGMSG(WM_NCMOUSEMOVE);
+            REGMSG(WM_NCLBUTTONDOWN);
+            REGMSG(WM_NCLBUTTONUP);
+            REGMSG(WM_NCLBUTTONDBLCLK);
+            REGMSG(WM_NCRBUTTONDOWN);
+            REGMSG(WM_NCRBUTTONUP);
+            REGMSG(WM_NCRBUTTONDBLCLK);
+            REGMSG(WM_NCMBUTTONDOWN);
+            REGMSG(WM_NCMBUTTONUP);
+            REGMSG(WM_NCMBUTTONDBLCLK);
+            REGMSG(WM_KEYDOWN);
+            REGMSG(WM_KEYUP);
+            REGMSG(WM_CHAR);
+            REGMSG(WM_DEADCHAR);
+            REGMSG(WM_SYSKEYDOWN);
+            REGMSG(WM_SYSKEYUP);
+            REGMSG(WM_SYSCHAR);
+            REGMSG(WM_SYSDEADCHAR);
+            REGMSG(WM_KEYLAST);
+            REGMSG(WM_INITDIALOG);
+            REGMSG(WM_COMMAND);
+            REGMSG(WM_SYSCOMMAND);
+            REGMSG(WM_TIMER);
+            REGMSG(WM_HSCROLL);
+            REGMSG(WM_VSCROLL);
+            REGMSG(WM_INITMENU);
+            REGMSG(WM_INITMENUPOPUP);
+            REGMSG(WM_MENUSELECT);
+            REGMSG(WM_MENUCHAR);
+            REGMSG(WM_ENTERIDLE);
+            REGMSG(WM_MOUSEWHEEL);
+            REGMSG(WM_MOUSEMOVE);
+            REGMSG(WM_LBUTTONDOWN);
+            REGMSG(WM_LBUTTONUP);
+            REGMSG(WM_LBUTTONDBLCLK);
+            REGMSG(WM_RBUTTONDOWN);
+            REGMSG(WM_RBUTTONUP);
+            REGMSG(WM_RBUTTONDBLCLK);
+            REGMSG(WM_MBUTTONDOWN);
+            REGMSG(WM_MBUTTONUP);
+            REGMSG(WM_MBUTTONDBLCLK);
+            REGMSG(WM_PARENTNOTIFY);
+            REGMSG(WM_MDICREATE);
+            REGMSG(WM_MDIDESTROY);
+            REGMSG(WM_MDIACTIVATE);
+            REGMSG(WM_MDIRESTORE);
+            REGMSG(WM_MDINEXT);
+            REGMSG(WM_MDIMAXIMIZE);
+            REGMSG(WM_MDITILE);
+            REGMSG(WM_MDICASCADE);
+            REGMSG(WM_MDIICONARRANGE);
+            REGMSG(WM_MDIGETACTIVE);
+            REGMSG(WM_MDISETMENU);
+            REGMSG(WM_CUT);
+            REGMSG(WM_COPYDATA);
+            REGMSG(WM_COPY);
+            REGMSG(WM_PASTE);
+            REGMSG(WM_CLEAR);
+            REGMSG(WM_UNDO);
+            REGMSG(WM_RENDERFORMAT);
+            REGMSG(WM_RENDERALLFORMATS);
+            REGMSG(WM_DESTROYCLIPBOARD);
+            REGMSG(WM_DRAWCLIPBOARD);
+            REGMSG(WM_PAINTCLIPBOARD);
+            REGMSG(WM_VSCROLLCLIPBOARD);
+            REGMSG(WM_SIZECLIPBOARD);
+            REGMSG(WM_ASKCBFORMATNAME);
+            REGMSG(WM_CHANGECBCHAIN);
+            REGMSG(WM_HSCROLLCLIPBOARD);
+            REGMSG(WM_QUERYNEWPALETTE);
+            REGMSG(WM_PALETTEISCHANGING);
+            REGMSG(WM_PALETTECHANGED);
+            REGMSG(WM_DROPFILES);
+            REGMSG(WM_POWER);
+            REGMSG(WM_WINDOWPOSCHANGED);
+            REGMSG(WM_WINDOWPOSCHANGING);
+            REGMSG(WM_HELP);
+            REGMSG(WM_NOTIFY);
+            REGMSG(WM_CONTEXTMENU);
+            REGMSG(WM_TCARD);
+            REGMSG(WM_MDIREFRESHMENU);
+            REGMSG(WM_MOVING);
+            REGMSG(WM_STYLECHANGED);
+            REGMSG(WM_STYLECHANGING);
+            REGMSG(WM_SIZING);
+            REGMSG(WM_SETHOTKEY);
+            REGMSG(WM_PRINT);
+            REGMSG(WM_PRINTCLIENT);
+            REGMSG(WM_POWERBROADCAST);
+            REGMSG(WM_HOTKEY);
+            REGMSG(WM_GETICON);
+            REGMSG(WM_EXITMENULOOP);
+            REGMSG(WM_ENTERMENULOOP);
+            REGMSG(WM_DISPLAYCHANGE);
+            REGMSG(WM_SETICON);
+            REGMSG(WM_CAPTURECHANGED);
+            REGMSG(WM_DEVICECHANGE);
+            REGMSG(WM_IME_SETCONTEXT);
+            REGMSG(WM_IME_NOTIFY);
+            REGMSG(WM_NCMOUSELEAVE);
+            REGMSG(WM_EXITSIZEMOVE);
+            REGMSG(WM_DWMNCRENDERINGCHANGED);
+            REGMSG(WM_ENTERSIZEMOVE);
+#undef REGMSG
+         default:os<<msg.value; break;
          }
-         TPRINTLN(". Message: ", pMsgBuf);
-         LocalFree(pMsgBuf);
+         return os;
       }
-      else
+   };
+   struct HResult
+   {
+      HResult(long value) : value(value)
       {
-         TPRINT("HRESULT Succeeded");
       }
-   }
+      long value;
+      template<class T>
+      friend std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, HResult hr)
+      {
+         return os << hr.value;
+      }
+      std::string GetMessageString()
+      {
+         char* msg;
+         std::string str;
+         DWORD len = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                                    FORMAT_MESSAGE_FROM_SYSTEM |
+                                    FORMAT_MESSAGE_IGNORE_INSERTS,
+                                    nullptr,
+                                    value, 
+                                    MAKELANGID(LANG_NEUTRAL,
+                                               SUBLANG_DEFAULT),
+                                               (char*)&msg,
+                                    0, 
+                                    nullptr);
+         if (len != 0)
+         {
+            msg[len - 1] = 0; // \n
+            msg[len - 2] = 0; // \r
+            str = msg;
+            LocalFree(msg);
+         }
+         return str;
+      }
+   };
+#endif
 }
 
 #endif

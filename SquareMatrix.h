@@ -13,21 +13,30 @@ namespace GG
       using Scalar = TScalar;
       using FScalar = const Scalar &;
       using FSquareMatrix = const SquareMatrix &;
-      static constexpr auto NothrowScalar = std::is_nothrow_default_constructible_v<Scalar>;
-      SquareMatrix( unsigned size ) noexcept( NothrowScalar ) :
+      SquareMatrix( unsigned size ) noexcept :
          m_Size( size ),
          m_Arr( new Scalar[m_Size * m_Size]{} )
       {
          assert( size > 1 && "Why not use just one scalar?" );
       }
-      SquareMatrix( FSquareMatrix other ) noexcept( NothrowScalar ) :
+      SquareMatrix( FSquareMatrix other ) noexcept :
          m_Size( other.m_Size ),
-         m_Arr( new Scalar[m_Size * m_Size]{} )
+         m_Arr( new Scalar[m_Size * m_Size] )
       {
          for ( int i = 0; i < m_Size * m_Size; i++ )
             m_Arr[i] = other[i];
       }
-      ~SquareMatrix()
+      SquareMatrix( SquareMatrix&& ) = default;
+      SquareMatrix& operator=( FSquareMatrix other )
+      {
+         delete[] m_Arr;
+         m_Size = other.m_Size;
+         m_Arr = new Scalar[m_Size * m_Size];
+         for ( int i = 0; i < m_Size * m_Size; i++ )
+            m_Arr[i] = other[i];
+      }
+      SquareMatrix& operator=( SquareMatrix&& ) = default;
+      ~SquareMatrix() noexcept
       {
          delete[] m_Arr;
       }
@@ -51,7 +60,7 @@ namespace GG
          assert( y * m_Size + x );
          return m_Arr[y * m_Size + x];
       }
-      Scalar Determinant() const
+      Scalar Determinant() const noexcept
       {
          Scalar result{};
          switch ( m_Size )
@@ -77,7 +86,7 @@ namespace GG
          }
          return result;
       }
-      SquareMatrix Transposed() const noexcept( NothrowScalar )
+      SquareMatrix Transposed() const noexcept
       {
          SquareMatrix ret( m_Size );
          for ( unsigned y = 0; y < m_Size; y++ )
@@ -85,7 +94,7 @@ namespace GG
                ret.Get( x, y ) = Get( y, x );
          return ret;
       }
-      SquareMatrix Inversed() const noexcept( NothrowScalar )
+      SquareMatrix Inversed() const noexcept
       {
          SquareMatrix ret( m_Size );
          switch ( m_Size )
@@ -108,21 +117,21 @@ namespace GG
          }
          return ret;
       }
-      friend SquareMatrix operator+( FSquareMatrix a, FSquareMatrix b ) noexcept( NothrowScalar )
+      friend SquareMatrix operator+( FSquareMatrix a, FSquareMatrix b ) noexcept
       {
          assert( a.m_Size == b.m_Size );
          SquareMatrix ret( a.m_Size );
          for ( int i = 0; i < m_Size * m_Size; i++ )
             ret[i] = a[i] + b[i];
       }
-      friend SquareMatrix operator-( FSquareMatrix a, FSquareMatrix b ) noexcept( NothrowScalar )
+      friend SquareMatrix operator-( FSquareMatrix a, FSquareMatrix b ) noexcept
       {
          assert( a.m_Size == b.m_Size );
          SquareMatrix ret( a.m_Size );
          for ( int i = 0; i < m_Size * m_Size; i++ )
             ret[i] = a[i] - b[i];
       }
-      friend SquareMatrix operator*( FSquareMatrix a, FSquareMatrix b ) noexcept( NothrowScalar )
+      friend SquareMatrix operator*( FSquareMatrix a, FSquareMatrix b ) noexcept
       {
          assert( a.m_Size == b.m_Size );
          SquareMatrix ret( a.m_Size );

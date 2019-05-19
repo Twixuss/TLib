@@ -1,5 +1,5 @@
-#ifndef _TLIB_SORTED_LIST_H
-#define _TLIB_SORTED_LIST_H
+#ifndef _TL_SORTED_LIST_H
+#define _TL_SORTED_LIST_H
 #include <iostream>
 #pragma push_macro("new")
 #undef new

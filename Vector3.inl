@@ -4,246 +4,244 @@ namespace TLib
    struct Vector3
    {
       using Scalar = TScalar;
-      using FScalar = const Scalar&;
+      using FScalar = const Scalar &;
       using Vector2 = Vector2<Scalar>;
       using Vector4 = Vector4<Scalar>;
-      using FVector2 = const Vector2&;
-      using FVector3 = const Vector3&;
-      using FVector4 = const Vector4&;
-      union
-      {
-         struct
-         {
-            Scalar x, y, z;
-         };
-         Scalar scl[3];
-      };
-#pragma region [ Constructors ]
-      constexpr Vector3() noexcept :
-         x( (Scalar)0 ),
-         y( (Scalar)0 ),
-         z( (Scalar)0 )
-      {     
-      }
-      constexpr Vector3( FScalar v ) noexcept :
-         x( v ),
-         y( v ),
-         z( v )
+      using FVector2 = const Vector2 &;
+      using FVector3 = const Vector3 &;
+      using FVector4 = const Vector4 &;
+      Scalar x{};
+      Scalar y{};
+      Scalar z{};
+      TL_CONSTEXPR Vector3() = default;
+      TL_CONSTEXPR Vector3(FScalar v) TL_NOEXCEPT :
+         x(v),
+         y(v),
+         z(v)
       {
       }
-      constexpr Vector3( FScalar x, FScalar y ) noexcept :
-         x( x ),
-         y( y ),
-         z()
+      TL_CONSTEXPR Vector3(FScalar x, FScalar y) TL_NOEXCEPT :
+         x(x),
+         y(y)
       {
       }
-      constexpr Vector3( FScalar x, FScalar y, FScalar z ) noexcept :
-         x( x ),
-         y( y ),
-         z( z )
+      TL_CONSTEXPR Vector3(FScalar x, FScalar y, FScalar z) TL_NOEXCEPT :
+         x(x),
+         y(y),
+         z(z)
       {
       }
-      constexpr Vector3( FVector2 v, FScalar z ) noexcept :
-         x( v.x ),
-         y( v.y ),
-         z( z )
+      TL_CONSTEXPR Vector3(FVector2 v, FScalar z = {}) TL_NOEXCEPT :
+         x(v.x),
+         y(v.y),
+         z(z)
       {
       }
-      constexpr Vector3( FScalar x, FVector2 v ) noexcept :
-         x( x ),
-         y( v.x ),
-         z( v.y )
+      TL_CONSTEXPR Vector3(FScalar x, FVector2 v) TL_NOEXCEPT :
+         x(x),
+         y(v.x),
+         z(v.y)
       {
       }
-      constexpr Vector3( FVector3 ) = default;
-      constexpr Vector3( Vector3&& ) = default;
+      TL_CONSTEXPR Vector3(const Vector3&) = default;
+      TL_CONSTEXPR Vector3(Vector3&&) = default;
       template<class Other>
-      constexpr explicit Vector3( const Vector3<Other>& other ) noexcept :
-         x( (Scalar) other.x ),
-         y( (Scalar) other.y ),
-         z( (Scalar) other.z )
+      TL_CONSTEXPR explicit Vector3(const Vector3<Other>& other) TL_NOEXCEPT :
+         x((Scalar)other.x),
+         y((Scalar)other.y),
+         z((Scalar)other.z)
       {
       }
-#pragma endregion
-#pragma region [ operator= ]
-      constexpr Vector3& operator=( FVector3 ) = default;
-      constexpr Vector3& operator=( Vector3&& ) = default;
-#pragma endregion
-      [[nodiscard]] constexpr Scalar SqrMagnitude() const noexcept
+      TL_CONSTEXPR Vector3& operator=(const Vector3&) = default;
+      TL_CONSTEXPR Vector3& operator=(Vector3&&) = default;
+      TL_NODISCARD TL_CONSTEXPR Scalar SqrMagnitude() const TL_NOEXCEPT
       {
          return x * x + y * y + z * z;
       }
       template<class ConvertTo = Scalar>
-      [[nodiscard]] constexpr ConvertTo Magnitude() const noexcept
+      TL_NODISCARD TL_CONSTEXPR ConvertTo Magnitude() const TL_NOEXCEPT
       {
-         return Math::Sqrt( (ConvertTo)SqrMagnitude() );
+         return Math::Sqrt((ConvertTo)SqrMagnitude());
       }
       template<class ConvertTo = Scalar>
-      [[nodiscard]] constexpr Vector3<ConvertTo> Normalized() const noexcept
+      TL_NODISCARD TL_CONSTEXPR Vector3<ConvertTo> Normalized() const TL_NOEXCEPT
       {
-         return (Vector3<ConvertTo>)*this / Magnitude<ConvertTo>();
+         return (Vector3<ConvertTo>)* this / Magnitude<ConvertTo>();
       }
-#pragma region [ Data ]
-      [[nodiscard]] constexpr Scalar* Data() noexcept
+      TL_NODISCARD TL_CONSTEXPR Vector3 ProjectedOn(FVector3 v) const TL_NOEXCEPT
+      {
+         return v * Dot(*this, v);
+      }
+      TL_NODISCARD TL_CONSTEXPR Scalar* Data() TL_NOEXCEPT
       {
          return scl;
       }
-      [[nodiscard]] constexpr const Scalar* Data() const noexcept
+      TL_NODISCARD TL_CONSTEXPR const Scalar* Data() const TL_NOEXCEPT
       {
          return scl;
       }
-#pragma endregion
-#pragma region [ Element reorder ]
-      [[nodiscard]] constexpr Vector2 xx() const noexcept { return { x, x }; }
-      [[nodiscard]] constexpr Vector2 xy() const noexcept { return { x, y }; }
-      [[nodiscard]] constexpr Vector2 xz() const noexcept { return { x, z }; }
-      [[nodiscard]] constexpr Vector2 yx() const noexcept { return { y, x }; }
-      [[nodiscard]] constexpr Vector2 yy() const noexcept { return { y, y }; }
-      [[nodiscard]] constexpr Vector2 yz() const noexcept { return { y, z }; }
-      [[nodiscard]] constexpr Vector2 zx() const noexcept { return { z, x }; }
-      [[nodiscard]] constexpr Vector2 zy() const noexcept { return { z, y }; }
-      [[nodiscard]] constexpr Vector2 zz() const noexcept { return { z, z }; }
-      [[nodiscard]] constexpr Vector3 xxx() const noexcept { return { x, x, x }; }
-      [[nodiscard]] constexpr Vector3 xxy() const noexcept { return { x, x, y }; }
-      [[nodiscard]] constexpr Vector3 xxz() const noexcept { return { x, x, z }; }
-      [[nodiscard]] constexpr Vector3 xyx() const noexcept { return { x, y, x }; }
-      [[nodiscard]] constexpr Vector3 xyy() const noexcept { return { x, y, y }; }
-      [[nodiscard]] constexpr Vector3 xyz() const noexcept { return { x, y, z }; }
-      [[nodiscard]] constexpr Vector3 xzx() const noexcept { return { x, z, x }; }
-      [[nodiscard]] constexpr Vector3 xzy() const noexcept { return { x, z, y }; }
-      [[nodiscard]] constexpr Vector3 xzz() const noexcept { return { x, z, z }; }
-      [[nodiscard]] constexpr Vector3 yxx() const noexcept { return { y, x, x }; }
-      [[nodiscard]] constexpr Vector3 yxy() const noexcept { return { y, x, y }; }
-      [[nodiscard]] constexpr Vector3 yxz() const noexcept { return { y, x, z }; }
-      [[nodiscard]] constexpr Vector3 yyx() const noexcept { return { y, y, x }; }
-      [[nodiscard]] constexpr Vector3 yyy() const noexcept { return { y, y, y }; }
-      [[nodiscard]] constexpr Vector3 yyz() const noexcept { return { y, y, z }; }
-      [[nodiscard]] constexpr Vector3 yzx() const noexcept { return { y, z, x }; }
-      [[nodiscard]] constexpr Vector3 yzy() const noexcept { return { y, z, y }; }
-      [[nodiscard]] constexpr Vector3 yzz() const noexcept { return { y, z, z }; }
-      [[nodiscard]] constexpr Vector3 zxx() const noexcept { return { z, x, x }; }
-      [[nodiscard]] constexpr Vector3 zxy() const noexcept { return { z, x, y }; }
-      [[nodiscard]] constexpr Vector3 zxz() const noexcept { return { z, x, z }; }
-      [[nodiscard]] constexpr Vector3 zyx() const noexcept { return { z, y, x }; }
-      [[nodiscard]] constexpr Vector3 zyy() const noexcept { return { z, y, y }; }
-      [[nodiscard]] constexpr Vector3 zyz() const noexcept { return { z, y, z }; }
-      [[nodiscard]] constexpr Vector3 zzx() const noexcept { return { z, z, x }; }
-      [[nodiscard]] constexpr Vector3 zzy() const noexcept { return { z, z, y }; }
-      [[nodiscard]] constexpr Vector3 zzz() const noexcept { return { z, z, z }; }
-      [[nodiscard]] constexpr Vector4 xxxx() const noexcept { return { x, x, x, x }; }
-      [[nodiscard]] constexpr Vector4 xxxy() const noexcept { return { x, x, x, y }; }
-      [[nodiscard]] constexpr Vector4 xxxz() const noexcept { return { x, x, x, z }; }
-      [[nodiscard]] constexpr Vector4 xxyx() const noexcept { return { x, x, y, x }; }
-      [[nodiscard]] constexpr Vector4 xxyy() const noexcept { return { x, x, y, y }; }
-      [[nodiscard]] constexpr Vector4 xxyz() const noexcept { return { x, x, y, z }; }
-      [[nodiscard]] constexpr Vector4 xxzx() const noexcept { return { x, x, z, x }; }
-      [[nodiscard]] constexpr Vector4 xxzy() const noexcept { return { x, x, z, y }; }
-      [[nodiscard]] constexpr Vector4 xxzz() const noexcept { return { x, x, z, z }; }
-      [[nodiscard]] constexpr Vector4 xyxx() const noexcept { return { x, y, x, x }; }
-      [[nodiscard]] constexpr Vector4 xyxy() const noexcept { return { x, y, x, y }; }
-      [[nodiscard]] constexpr Vector4 xyxz() const noexcept { return { x, y, x, z }; }
-      [[nodiscard]] constexpr Vector4 xyyx() const noexcept { return { x, y, y, x }; }
-      [[nodiscard]] constexpr Vector4 xyyy() const noexcept { return { x, y, y, y }; }
-      [[nodiscard]] constexpr Vector4 xyyz() const noexcept { return { x, y, y, z }; }
-      [[nodiscard]] constexpr Vector4 xyzx() const noexcept { return { x, y, z, x }; }
-      [[nodiscard]] constexpr Vector4 xyzy() const noexcept { return { x, y, z, y }; }
-      [[nodiscard]] constexpr Vector4 xyzz() const noexcept { return { x, y, z, z }; }
-      [[nodiscard]] constexpr Vector4 xzxx() const noexcept { return { x, z, x, x }; }
-      [[nodiscard]] constexpr Vector4 xzxy() const noexcept { return { x, z, x, y }; }
-      [[nodiscard]] constexpr Vector4 xzxz() const noexcept { return { x, z, x, z }; }
-      [[nodiscard]] constexpr Vector4 xzyx() const noexcept { return { x, z, y, x }; }
-      [[nodiscard]] constexpr Vector4 xzyy() const noexcept { return { x, z, y, y }; }
-      [[nodiscard]] constexpr Vector4 xzyz() const noexcept { return { x, z, y, z }; }
-      [[nodiscard]] constexpr Vector4 xzzx() const noexcept { return { x, z, z, x }; }
-      [[nodiscard]] constexpr Vector4 xzzy() const noexcept { return { x, z, z, y }; }
-      [[nodiscard]] constexpr Vector4 xzzz() const noexcept { return { x, z, z, z }; }
-      [[nodiscard]] constexpr Vector4 yxxx() const noexcept { return { y, x, x, x }; }
-      [[nodiscard]] constexpr Vector4 yxxy() const noexcept { return { y, x, x, y }; }
-      [[nodiscard]] constexpr Vector4 yxxz() const noexcept { return { y, x, x, z }; }
-      [[nodiscard]] constexpr Vector4 yxyx() const noexcept { return { y, x, y, x }; }
-      [[nodiscard]] constexpr Vector4 yxyy() const noexcept { return { y, x, y, y }; }
-      [[nodiscard]] constexpr Vector4 yxyz() const noexcept { return { y, x, y, z }; }
-      [[nodiscard]] constexpr Vector4 yxzx() const noexcept { return { y, x, z, x }; }
-      [[nodiscard]] constexpr Vector4 yxzy() const noexcept { return { y, x, z, y }; }
-      [[nodiscard]] constexpr Vector4 yxzz() const noexcept { return { y, x, z, z }; }
-      [[nodiscard]] constexpr Vector4 yyxx() const noexcept { return { y, y, x, x }; }
-      [[nodiscard]] constexpr Vector4 yyxy() const noexcept { return { y, y, x, y }; }
-      [[nodiscard]] constexpr Vector4 yyxz() const noexcept { return { y, y, x, z }; }
-      [[nodiscard]] constexpr Vector4 yyyx() const noexcept { return { y, y, y, x }; }
-      [[nodiscard]] constexpr Vector4 yyyy() const noexcept { return { y, y, y, y }; }
-      [[nodiscard]] constexpr Vector4 yyyz() const noexcept { return { y, y, y, z }; }
-      [[nodiscard]] constexpr Vector4 yyzx() const noexcept { return { y, y, z, x }; }
-      [[nodiscard]] constexpr Vector4 yyzy() const noexcept { return { y, y, z, y }; }
-      [[nodiscard]] constexpr Vector4 yyzz() const noexcept { return { y, y, z, z }; }
-      [[nodiscard]] constexpr Vector4 yzxx() const noexcept { return { y, z, x, x }; }
-      [[nodiscard]] constexpr Vector4 yzxy() const noexcept { return { y, z, x, y }; }
-      [[nodiscard]] constexpr Vector4 yzxz() const noexcept { return { y, z, x, z }; }
-      [[nodiscard]] constexpr Vector4 yzyx() const noexcept { return { y, z, y, x }; }
-      [[nodiscard]] constexpr Vector4 yzyy() const noexcept { return { y, z, y, y }; }
-      [[nodiscard]] constexpr Vector4 yzyz() const noexcept { return { y, z, y, z }; }
-      [[nodiscard]] constexpr Vector4 yzzx() const noexcept { return { y, z, z, x }; }
-      [[nodiscard]] constexpr Vector4 yzzy() const noexcept { return { y, z, z, y }; }
-      [[nodiscard]] constexpr Vector4 yzzz() const noexcept { return { y, z, z, z }; }
-      [[nodiscard]] constexpr Vector4 zxxx() const noexcept { return { z, x, x, x }; }
-      [[nodiscard]] constexpr Vector4 zxxy() const noexcept { return { z, x, x, y }; }
-      [[nodiscard]] constexpr Vector4 zxxz() const noexcept { return { z, x, x, z }; }
-      [[nodiscard]] constexpr Vector4 zxyx() const noexcept { return { z, x, y, x }; }
-      [[nodiscard]] constexpr Vector4 zxyy() const noexcept { return { z, x, y, y }; }
-      [[nodiscard]] constexpr Vector4 zxyz() const noexcept { return { z, x, y, z }; }
-      [[nodiscard]] constexpr Vector4 zxzx() const noexcept { return { z, x, z, x }; }
-      [[nodiscard]] constexpr Vector4 zxzy() const noexcept { return { z, x, z, y }; }
-      [[nodiscard]] constexpr Vector4 zxzz() const noexcept { return { z, x, z, z }; }
-      [[nodiscard]] constexpr Vector4 zyxx() const noexcept { return { z, y, x, x }; }
-      [[nodiscard]] constexpr Vector4 zyxy() const noexcept { return { z, y, x, y }; }
-      [[nodiscard]] constexpr Vector4 zyxz() const noexcept { return { z, y, x, z }; }
-      [[nodiscard]] constexpr Vector4 zyyx() const noexcept { return { z, y, y, x }; }
-      [[nodiscard]] constexpr Vector4 zyyy() const noexcept { return { z, y, y, y }; }
-      [[nodiscard]] constexpr Vector4 zyyz() const noexcept { return { z, y, y, z }; }
-      [[nodiscard]] constexpr Vector4 zyzx() const noexcept { return { z, y, z, x }; }
-      [[nodiscard]] constexpr Vector4 zyzy() const noexcept { return { z, y, z, y }; }
-      [[nodiscard]] constexpr Vector4 zyzz() const noexcept { return { z, y, z, z }; }
-      [[nodiscard]] constexpr Vector4 zzxx() const noexcept { return { z, z, x, x }; }
-      [[nodiscard]] constexpr Vector4 zzxy() const noexcept { return { z, z, x, y }; }
-      [[nodiscard]] constexpr Vector4 zzxz() const noexcept { return { z, z, x, z }; }
-      [[nodiscard]] constexpr Vector4 zzyx() const noexcept { return { z, z, y, x }; }
-      [[nodiscard]] constexpr Vector4 zzyy() const noexcept { return { z, z, y, y }; }
-      [[nodiscard]] constexpr Vector4 zzyz() const noexcept { return { z, z, y, z }; }
-      [[nodiscard]] constexpr Vector4 zzzx() const noexcept { return { z, z, z, x }; }
-      [[nodiscard]] constexpr Vector4 zzzy() const noexcept { return { z, z, z, y }; }
-      [[nodiscard]] constexpr Vector4 zzzz() const noexcept { return { z, z, z, z }; }
-#pragma endregion
-      [[nodiscard]] constexpr static bool Equal( FVector3 a, FVector3 b, FScalar epsilon ) noexcept
+      TL_NODISCARD TL_CONSTEXPR Scalar& operator[](unsigned i) TL_NOEXCEPT
       {
-         return (
-            Math::Abs( a.x - b.x ) < epsilon &&
-            Math::Abs( a.y - b.y ) < epsilon &&
-            Math::Abs( a.z - b.z ) < epsilon );
+         return Data()[i];
       }
-      [[nodiscard]] constexpr static Vector3 Cross( FVector3 a, FVector3 b ) noexcept
+      TL_NODISCARD TL_CONSTEXPR FScalar operator[](unsigned i) const TL_NOEXCEPT
       {
-         return
-         {
-            a.y * b.z - a.z * b.y,
-            a.z * b.x - a.x * b.z,
-            a.x * b.y - a.y * b.x
-         };
+         return Data()[i];
       }
-      [[nodiscard]] constexpr static Scalar Dot( FVector3 a, FVector3 b ) noexcept
+      TL_NODISCARD TL_CONSTEXPR Vector2 xx() const TL_NOEXCEPT { return {x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector2 xy() const TL_NOEXCEPT { return {x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector2 xz() const TL_NOEXCEPT { return {x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector2 yx() const TL_NOEXCEPT { return {y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector2 yy() const TL_NOEXCEPT { return {y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector2 yz() const TL_NOEXCEPT { return {y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector2 zx() const TL_NOEXCEPT { return {z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector2 zy() const TL_NOEXCEPT { return {z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector2 zz() const TL_NOEXCEPT { return {z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xxx() const TL_NOEXCEPT { return {x, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xxy() const TL_NOEXCEPT { return {x, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xxz() const TL_NOEXCEPT { return {x, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xyx() const TL_NOEXCEPT { return {x, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xyy() const TL_NOEXCEPT { return {x, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xyz() const TL_NOEXCEPT { return {x, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xzx() const TL_NOEXCEPT { return {x, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xzy() const TL_NOEXCEPT { return {x, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 xzz() const TL_NOEXCEPT { return {x, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yxx() const TL_NOEXCEPT { return {y, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yxy() const TL_NOEXCEPT { return {y, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yxz() const TL_NOEXCEPT { return {y, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yyx() const TL_NOEXCEPT { return {y, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yyy() const TL_NOEXCEPT { return {y, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yyz() const TL_NOEXCEPT { return {y, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yzx() const TL_NOEXCEPT { return {y, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yzy() const TL_NOEXCEPT { return {y, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 yzz() const TL_NOEXCEPT { return {y, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zxx() const TL_NOEXCEPT { return {z, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zxy() const TL_NOEXCEPT { return {z, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zxz() const TL_NOEXCEPT { return {z, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zyx() const TL_NOEXCEPT { return {z, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zyy() const TL_NOEXCEPT { return {z, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zyz() const TL_NOEXCEPT { return {z, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zzx() const TL_NOEXCEPT { return {z, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zzy() const TL_NOEXCEPT { return {z, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 zzz() const TL_NOEXCEPT { return {z, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxxx() const TL_NOEXCEPT { return {x, x, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxxy() const TL_NOEXCEPT { return {x, x, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxxz() const TL_NOEXCEPT { return {x, x, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxyx() const TL_NOEXCEPT { return {x, x, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxyy() const TL_NOEXCEPT { return {x, x, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxyz() const TL_NOEXCEPT { return {x, x, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxzx() const TL_NOEXCEPT { return {x, x, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxzy() const TL_NOEXCEPT { return {x, x, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xxzz() const TL_NOEXCEPT { return {x, x, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyxx() const TL_NOEXCEPT { return {x, y, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyxy() const TL_NOEXCEPT { return {x, y, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyxz() const TL_NOEXCEPT { return {x, y, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyyx() const TL_NOEXCEPT { return {x, y, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyyy() const TL_NOEXCEPT { return {x, y, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyyz() const TL_NOEXCEPT { return {x, y, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyzx() const TL_NOEXCEPT { return {x, y, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyzy() const TL_NOEXCEPT { return {x, y, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xyzz() const TL_NOEXCEPT { return {x, y, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzxx() const TL_NOEXCEPT { return {x, z, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzxy() const TL_NOEXCEPT { return {x, z, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzxz() const TL_NOEXCEPT { return {x, z, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzyx() const TL_NOEXCEPT { return {x, z, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzyy() const TL_NOEXCEPT { return {x, z, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzyz() const TL_NOEXCEPT { return {x, z, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzzx() const TL_NOEXCEPT { return {x, z, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzzy() const TL_NOEXCEPT { return {x, z, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 xzzz() const TL_NOEXCEPT { return {x, z, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxxx() const TL_NOEXCEPT { return {y, x, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxxy() const TL_NOEXCEPT { return {y, x, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxxz() const TL_NOEXCEPT { return {y, x, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxyx() const TL_NOEXCEPT { return {y, x, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxyy() const TL_NOEXCEPT { return {y, x, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxyz() const TL_NOEXCEPT { return {y, x, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxzx() const TL_NOEXCEPT { return {y, x, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxzy() const TL_NOEXCEPT { return {y, x, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yxzz() const TL_NOEXCEPT { return {y, x, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyxx() const TL_NOEXCEPT { return {y, y, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyxy() const TL_NOEXCEPT { return {y, y, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyxz() const TL_NOEXCEPT { return {y, y, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyyx() const TL_NOEXCEPT { return {y, y, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyyy() const TL_NOEXCEPT { return {y, y, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyyz() const TL_NOEXCEPT { return {y, y, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyzx() const TL_NOEXCEPT { return {y, y, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyzy() const TL_NOEXCEPT { return {y, y, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yyzz() const TL_NOEXCEPT { return {y, y, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzxx() const TL_NOEXCEPT { return {y, z, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzxy() const TL_NOEXCEPT { return {y, z, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzxz() const TL_NOEXCEPT { return {y, z, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzyx() const TL_NOEXCEPT { return {y, z, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzyy() const TL_NOEXCEPT { return {y, z, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzyz() const TL_NOEXCEPT { return {y, z, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzzx() const TL_NOEXCEPT { return {y, z, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzzy() const TL_NOEXCEPT { return {y, z, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 yzzz() const TL_NOEXCEPT { return {y, z, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxxx() const TL_NOEXCEPT { return {z, x, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxxy() const TL_NOEXCEPT { return {z, x, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxxz() const TL_NOEXCEPT { return {z, x, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxyx() const TL_NOEXCEPT { return {z, x, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxyy() const TL_NOEXCEPT { return {z, x, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxyz() const TL_NOEXCEPT { return {z, x, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxzx() const TL_NOEXCEPT { return {z, x, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxzy() const TL_NOEXCEPT { return {z, x, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zxzz() const TL_NOEXCEPT { return {z, x, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyxx() const TL_NOEXCEPT { return {z, y, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyxy() const TL_NOEXCEPT { return {z, y, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyxz() const TL_NOEXCEPT { return {z, y, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyyx() const TL_NOEXCEPT { return {z, y, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyyy() const TL_NOEXCEPT { return {z, y, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyyz() const TL_NOEXCEPT { return {z, y, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyzx() const TL_NOEXCEPT { return {z, y, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyzy() const TL_NOEXCEPT { return {z, y, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zyzz() const TL_NOEXCEPT { return {z, y, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzxx() const TL_NOEXCEPT { return {z, z, x, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzxy() const TL_NOEXCEPT { return {z, z, x, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzxz() const TL_NOEXCEPT { return {z, z, x, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzyx() const TL_NOEXCEPT { return {z, z, y, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzyy() const TL_NOEXCEPT { return {z, z, y, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzyz() const TL_NOEXCEPT { return {z, z, y, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzzx() const TL_NOEXCEPT { return {z, z, z, x}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzzy() const TL_NOEXCEPT { return {z, z, z, y}; }
+      TL_NODISCARD TL_CONSTEXPR Vector4 zzzz() const TL_NOEXCEPT { return {z, z, z, z}; }
+      TL_NODISCARD TL_CONSTEXPR Vector3 operator+() TL_NOEXCEPT
       {
-         return a.x * b.x + a.y * b.y + a.z * b.z;
+         return {+x,+y,+z};
       }
-#pragma region [ op Vec ]
-      [[nodiscard]] constexpr friend Vector3 operator+( FVector3 a ) noexcept
+      TL_NODISCARD TL_CONSTEXPR Vector3 operator-() TL_NOEXCEPT
       {
-         return a;
+         return {-x,-y,-z};
       }
-      [[nodiscard]] constexpr friend Vector3 operator-( FVector3 a ) noexcept
+      TL_CONSTEXPR Vector3& operator+=(FVector3 v) TL_NOEXCEPT
       {
-         return { -a.x,-a.y,-a.z };
+         x += v.x;
+         y += v.y;
+         z += v.z;
+         return *this;
       }
-#pragma endregion
-#pragma region [ Vec op Vec ]
-      [[nodiscard]] constexpr friend Vector3 operator+( FVector3 a, FVector3 b ) noexcept
+      TL_CONSTEXPR Vector3& operator-=(FVector3 v) TL_NOEXCEPT
+      {
+         x -= v.x;
+         y -= v.y;
+         z -= v.z;
+         return *this;
+      }
+      TL_CONSTEXPR Vector3& operator*=(FVector3 v) TL_NOEXCEPT
+      {
+         x *= v.x;
+         y *= v.y;
+         z *= v.z;
+         return *this;
+      }
+      TL_CONSTEXPR Vector3& operator/=(FVector3 v) TL_NOEXCEPT
+      {
+         x /= v.x;
+         y /= v.y;
+         z /= v.z;
+         return *this;
+      }
+      TL_NODISCARD TL_CONSTEXPR friend Vector3 operator+(FVector3 a, FVector3 b) TL_NOEXCEPT
       {
          return
          {
@@ -252,7 +250,7 @@ namespace TLib
             a.z + b.z
          };
       }
-      [[nodiscard]] constexpr friend Vector3 operator-( FVector3 a, FVector3 b ) noexcept
+      TL_NODISCARD TL_CONSTEXPR friend Vector3 operator-(FVector3 a, FVector3 b) TL_NOEXCEPT
       {
          return
          {
@@ -261,7 +259,7 @@ namespace TLib
             a.z - b.z
          };
       }
-      [[nodiscard]] constexpr friend Vector3 operator*( FVector3 a, FVector3 b ) noexcept
+      TL_NODISCARD TL_CONSTEXPR friend Vector3 operator*(FVector3 a, FVector3 b) TL_NOEXCEPT
       {
          return
          {
@@ -270,7 +268,7 @@ namespace TLib
             a.z * b.z
          };
       }
-      [[nodiscard]] constexpr friend Vector3 operator/( FVector3 a, FVector3 b ) noexcept
+      TL_NODISCARD TL_CONSTEXPR friend Vector3 operator/(FVector3 a, FVector3 b) TL_NOEXCEPT
       {
          return
          {
@@ -279,49 +277,39 @@ namespace TLib
             a.z / b.z
          };
       }
-#pragma endregion
-#pragma region [ Vec op= Vec ]
-      constexpr friend Vector3& operator+=( Vector3& a, FVector3 b ) noexcept
-      {
-         a.x += b.x;
-         a.y += b.y;
-         a.z += b.z;
-         return a;
-      }
-      constexpr friend Vector3& operator-=( Vector3& a, FVector3 b ) noexcept
-      {
-         a.x -= b.x;
-         a.y -= b.y;
-         a.z -= b.z;
-         return a;
-      }
-      constexpr friend Vector3& operator*=( Vector3& a, FVector3 b ) noexcept
-      {
-         a.x *= b.x;
-         a.y *= b.y;
-         a.z *= b.z;
-         return a;
-      }
-      constexpr friend Vector3& operator/=( Vector3& a, FVector3 b ) noexcept
-      {
-         a.x /= b.x;
-         a.y /= b.y;
-         a.z /= b.z;
-         return a;
-      }
-#pragma endregion
-#pragma region [ Comparison ]
-      [[nodiscard]] constexpr friend bool operator==( FVector3 a, FVector3 b ) noexcept
+      TL_NODISCARD TL_CONSTEXPR friend bool operator==(FVector3 a, FVector3 b) TL_NOEXCEPT
       {
          return a.x == b.x && a.y == b.y && a.z == b.z;
       }
-      [[nodiscard]] constexpr friend bool operator!=( FVector3 a, FVector3 b ) noexcept
+      TL_NODISCARD TL_CONSTEXPR friend bool operator!=(FVector3 a, FVector3 b) TL_NOEXCEPT
       {
          return a.x != b.x || a.y != b.y || a.z != b.z;
       }
-#pragma endregion
+      TL_NODISCARD TL_CONSTEXPR static bool Equal(FVector3 a, FVector3 b, FScalar epsilon) TL_NOEXCEPT
+      {
+         return (
+            Math::Abs(a.x - b.x) < epsilon &&
+            Math::Abs(a.y - b.y) < epsilon &&
+            Math::Abs(a.z - b.z) < epsilon);
+      }
+      TL_NODISCARD TL_CONSTEXPR static Vector3 Cross(FVector3 a, FVector3 b) TL_NOEXCEPT
+      {
+         return
+         {
+            a.y * b.z - a.z * b.y,
+            a.z * b.x - a.x * b.z,
+            a.x * b.y - a.y * b.x
+         };
+      }
+      TL_NODISCARD TL_CONSTEXPR static Scalar Dot(FVector3 a, FVector3 b) TL_NOEXCEPT
+      {
+         return a.x* b.x + a.y * b.y + a.z * b.z;
+      }
+      TL_NODISCARD TL_CONSTEXPR static Vector3 Right() TL_NOEXCEPT { return {1, 0, 0}; }
+      TL_NODISCARD TL_CONSTEXPR static Vector3 Up() TL_NOEXCEPT { return {0, 1, 0}; }
+      TL_NODISCARD TL_CONSTEXPR static Vector3 Forward() TL_NOEXCEPT { return {0, 0, 1}; }
       template<typename T>
-      constexpr friend std::basic_ostream<T>& operator<<( std::basic_ostream<T> & s, FVector3 v ) noexcept
+      friend std::basic_ostream<T>& operator<<(std::basic_ostream<T> & s, FVector3 v) TL_NOEXCEPT
       {
          return s << '[' << v.x << ", " << v.y << ", " << v.z << ']';
       }

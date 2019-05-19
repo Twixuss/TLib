@@ -1,86 +1,71 @@
-#ifndef _TLIB_FILE_H
-#define _TLIB_FILE_H
+#ifndef _TL_FILE_H
+#define _TL_FILE_H
 
 #include <fstream>
 #include <vector>
 #include <functional>
 #include "String.h"
-
+#include "Exceptions.h"
 namespace TLib
 {
+   TL_CREATE_EXCEPTION( BadPath );
    template<class PathType>
-   std::string ReadFileContents(PathType&& path) noexcept
+   std::string ReadFileContents( PathType&& path ) noexcept
    {
-      std::ifstream s(std::forward<PathType>(path));
-      if ( !s.is_open( ) )
+      std::ifstream stream{ std::forward<PathType>( path ) };
+      if ( !stream.is_open() )
          return "";
-      std::string contents;
-      contents.reserve(256);
-      while (1)
-      {
-         auto c = s.get();
-         if (s.eof())
-            break;
-         contents.push_back(c);
-      }
+      std::string contents{ std::istreambuf_iterator<char>{ stream }, std::istreambuf_iterator<char>{} };
       return contents;
    }
    class TokenReader
    {
    public:
-      class UnexpectedSymbolException : public std::exception
-      {
-      public:
-         UnexpectedSymbolException(char c, unsigned line, const char* file) :
-            exception(BuildString("Failed to read floating point number. Unexpected symbol: ", c, " on line ", line, " in file ", file).c_str())
-         {
-         }
-      };
-      static constexpr auto EndOfFileToken = "$eof$";
-      static constexpr auto UnexpectedSymbolToken = "$unexpected$";
+      static constexpr auto EndOfFileToken{ "$eof$" };
+      static constexpr auto UnexpectedSymbolToken{ "$unexpected$" };
       template<class PathType, class SeparatorsType>
-      TokenReader(const PathType& path, const SeparatorsType& sep, bool recognizeFloats = false) noexcept :
-         filename(path),
-         s(path),
-         separators(sep),
-         recognizeFloats(recognizeFloats)
+      TokenReader( const PathType& path, const SeparatorsType& sep, bool recognizeFloats = false ) :
+         filename{ path },
+         s{ path },
+         separators{ sep },
+         recognizeFloats{ recognizeFloats }
       {
-         if (!s.is_open())
-            std::exception(("Bad path has been passed to TLib::TokenReader: " + filename).c_str());
+         if ( !s.is_open() )
+            throw BadPathException( "Bad path was passed to TLib::TokenReader: ", filename );
       }
-      std::string NextToken() noexcept
+      std::string NextToken()
       {
          isLiteral = false;
          charsToUnget = 0;
          int c = Get();
-         if (s.eof())
+         if ( s.eof() )
             return EndOfFileToken;
          std::string result;
-         while (c == ' ' || c == '\n')
+         while ( c == ' ' || c == '\n' )
          {
-            if (c == '\n')
+            if ( c == '\n' )
                NLCallBack();
             c = Get();
          }
-         if (IsSeparator(c))
+         if ( IsSeparator( c ) )
          {
-            result.push_back(c);
+            result.push_back( c );
             return result;
          }
-         const bool isNumber = isdigit(c);
+         const bool isNumber = isdigit( c );
          isLiteral = isNumber;
          bool secondPart = false;
-         while (1)
+         while ( 1 )
          {
-            result.push_back(c);
+            result.push_back( c );
             c = Get();
-            if (s.eof())
+            if ( s.eof() )
                break;
-            if (secondPart)
+            if ( secondPart )
             {
-               if (!isdigit(c))
+               if ( !isdigit( c ) )
                {
-                  if (IsSeparator(c))
+                  if ( IsSeparator( c ) )
                   {
                      Unget();
                      break;
@@ -90,27 +75,27 @@ namespace TLib
                      //throw UnexpectedSymbolException(c, line, filename.c_str());
                   secondPart = false;
                }
-               if (IsSeparator(c))
+               if ( IsSeparator( c ) )
                {
                   Unget();
                   break;
                }
             }
-            else if (isNumber && c == '.')
+            else if ( isNumber && c == '.' )
                secondPart = true;
-            else if (IsSeparator(c))
+            else if ( IsSeparator( c ) )
             {
                Unget();
                break;
             }
-            if (c == ' ' || c == '\n')
+            if ( c == ' ' || c == '\n' )
                break;
          }
          return result;
       }
       void UngetToken() noexcept
       {
-         while (charsToUnget--)
+         while ( charsToUnget-- )
             s.unget();
 
       }
@@ -119,7 +104,7 @@ namespace TLib
          return isLiteral;
       }
       template<class Callback>
-      void SetNewLineCallback(Callback c)
+      void SetNewLineCallback( Callback c )
       {
          nlcallback = c;
       }
@@ -134,16 +119,16 @@ namespace TLib
          charsToUnget--;
          s.unget();
       }
-      bool IsSeparator(char c) noexcept
+      bool IsSeparator( char c ) noexcept
       {
-         for (auto s : separators)
-            if (c == s)
+         for ( auto s : separators )
+            if ( c == s )
                return true;
          return false;
       }
       void NLCallBack() noexcept
       {
-         if (nlcallback)
+         if ( nlcallback )
             nlcallback();
       }
       std::function<void()> nlcallback = nullptr;

@@ -1,5 +1,5 @@
-#ifndef _TLIB_STRING_H
-#define _TLIB_STRING_H
+#ifndef _TL_STRING_H
+#define _TL_STRING_H
 
 #include <sstream>
 #include <utility>

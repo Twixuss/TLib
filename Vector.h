@@ -1,7 +1,9 @@
-#ifndef _TLIB_VECTOR_H
-#define _TLIB_VECTOR_H
+#ifndef _TL_VECTOR_H
+#define _TL_VECTOR_H
 
+#include "Attributes.h"
 #include "Switches.h"
+#include "Exceptions.h"
 #include "Math.h"
 
 #if TL_USE_SSE == 1
@@ -11,11 +13,11 @@
 
 namespace TLib
 {
-   template<class TScalar> struct Vector2;
-   template<class TScalar> struct Vector3;
-   template<class TScalar> struct Vector4;
-   template<class TScalar> struct Matrix3x3;
-   template<class TScalar> struct Matrix4x4;
+   template<class Scalar> struct Vector2;
+   template<class Scalar> struct Vector3;
+   template<class Scalar> struct Vector4;
+   template<class Scalar> struct Matrix3x3;
+   template<class Scalar> struct Matrix4x4;
 }
 
 #include "Vector2.inl"
@@ -44,6 +46,18 @@ namespace TLib
    using FMat3x3f = FMatrix3x3<float>;
    using FMat4x4f = FMatrix4x4<float>;
 
+   using Vec2d = Vector2<double>;
+   using Vec3d = Vector3<double>;
+   using Vec4d = Vector4<double>;
+   using Mat3x3d = Matrix3x3<double>;
+   using Mat4x4d = Matrix4x4<double>;
+
+   using FVec2d = FVector2<double>;
+   using FVec3d = FVector3<double>;
+   using FVec4d = FVector4<double>;
+   using FMat3x3d = FMatrix3x3<double>;
+   using FMat4x4d = FMatrix4x4<double>;
+
    using Vec3i = Vector3<int>;
    using Vec2i = Vector2<int>;
    using Vec4i = Vector4<int>;
@@ -58,39 +72,38 @@ namespace TLib
    namespace Math
    {
       template<class Scalar>
-      constexpr Scalar Area( FVector3<Scalar> a, FVector3<Scalar> b, FVector3<Scalar> c )
+      TL_NODISCARD TL_CONSTEXPR Scalar Area(FVector3<Scalar> a, 
+                                            FVector3<Scalar> b, 
+                                            FVector3<Scalar> c) TL_NOEXCEPT
       {
-         auto ab = ( a - b ).Magnitude();
-         auto ac = ( a - c ).Magnitude();
-         auto cb = ( c - b ).Magnitude();
-         auto p = ( ab + ac + cb ) * ( Scalar )0.5;
-         return Sqrt( p * ( p - ab ) * ( p - ac ) * ( p - cb ) );
+         auto ab = (a - b).Magnitude();
+         auto ac = (a - c).Magnitude();
+         auto cb = (c - b).Magnitude();
+         auto p = (ab + ac + cb) * (Scalar)0.5;
+         return Sqrt(p * (p - ab) * (p - ac) * (p - cb));
       }
       template<class Scalar>
-      constexpr Vector3<Scalar> CalculateTangent( FVector3<Scalar> pa,
-                                                  FVector3<Scalar> pb,
-                                                  FVector3<Scalar> pc,
-                                                  FVector2<Scalar> ta,
-                                                  FVector2<Scalar> tb,
-                                                  FVector2<Scalar> tc )
+      TL_NODISCARD TL_CONSTEXPR Vector3<Scalar> CalculateTangent(FVector3<Scalar> pa,
+                                                                 FVector3<Scalar> pb,
+                                                                 FVector3<Scalar> pc,
+                                                                 FVector2<Scalar> ta,
+                                                                 FVector2<Scalar> tb,
+                                                                 FVector2<Scalar> tc) TL_NOEXCEPT
       {
-         auto area = Area( pa, pb, pc );
-         if ( area != 0.0f )
+         auto area = Area(pa, pb, pc);
+         Vector3<Scalar> result;
+         if (area != 0.0f)
          {
             float delta = 1.0f / area;
             auto distBA = pb - pa;
             auto distCA = pc - pa;
             auto tdistBA = tb - ta;
             auto tdistCA = tc - ta;
-            // Calculates the face tangent to the current triangle.
-            return
-            {
-               delta * ( ( distBA.x * tdistCA.y ) + ( distCA.x * -tdistBA.y ) ),
-               delta * ( ( distBA.y * tdistCA.y ) + ( distCA.y * -tdistBA.y ) ),
-               delta * ( ( distBA.z * tdistCA.y ) + ( distCA.z * -tdistBA.y ) )
-            };
+            result.x = delta * ((distBA.x * tdistCA.y) + (distCA.x * -tdistBA.y));
+            result.y = delta * ((distBA.y * tdistCA.y) + (distCA.y * -tdistBA.y));
+            result.z = delta * ((distBA.z * tdistCA.y) + (distCA.z * -tdistBA.y));
          }
-         return{};
+         return result;
       }
    }
 }

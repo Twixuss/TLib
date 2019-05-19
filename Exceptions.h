@@ -9,25 +9,28 @@
 
 #include <exception>
 
-#define TL_EXCEPTION_CLASS(name)                                                   \
-class name : public std::exception                                                 \
-{                                                                                  \
-public:                                                                            \
-   template<class...T>                                                             \
-   name( T&& ... t ) : exception( BuildString( std::forward<T>( t )... ).c_str() ) \
-   {                                                                               \
-   }                                                                               \
+#define TL_CREATE_EXCEPTION(name)                                                                  \
+class name##Exception : public std::exception                                                      \
+{                                                                                                  \
+public:                                                                                            \
+   template<class...T>                                                                             \
+   name##Exception( T&& ... t ) noexcept : exception( BuildString( #name "Exception:\n\n" , std::forward<T>( t )... ).c_str() ) \
+   {                                                                                               \
+   }                                                                                               \
 }
 
 namespace TLib
 {
-   TL_EXCEPTION_CLASS( OutOfRangeException );
-   TL_EXCEPTION_CLASS( OutOfMemoryException );
-   TL_EXCEPTION_CLASS( ExcessActionException );
+   TL_CREATE_EXCEPTION( AssertionFailed );
+   TL_CREATE_EXCEPTION( DivideByZero );
+   TL_CREATE_EXCEPTION( ExcessAction );
+   TL_CREATE_EXCEPTION( OutOfRange );
+   TL_CREATE_EXCEPTION( OutOfMemory );
 }
 
-#undef TL_EXCEPTION_CLASS
+#define TL_ASSERT(x) if(!(x))throw AssertionFailedException(#x)
+#define TL_ASSERT_MSG(x, ...) if(!(x))throw AssertionFailedException(#x, __VA_ARGS__)
 
-#endif
+#endif /* TL_ALLOW_THROW */
 
 #endif

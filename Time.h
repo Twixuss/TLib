@@ -1,5 +1,5 @@
-#ifndef _TLIB_TIME_H
-#define _TLIB_TIME_H
+#ifndef _TL_TIME_H
+#define _TL_TIME_H
 
 #include "Attributes.h"
 

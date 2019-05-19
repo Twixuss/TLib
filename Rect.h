@@ -1,5 +1,5 @@
-#ifndef _TLIB_RECT_H
-#define _TLIB_RECT_H
+#ifndef _TL_RECT_H
+#define _TL_RECT_H
 
 #include "Vector.h"
 

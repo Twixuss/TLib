@@ -1,5 +1,5 @@
-#ifndef _TLIB_MEMORY_H
-#define _TLIB_MEMORY_H
+#ifndef _TL_MEMORY_H
+#define _TL_MEMORY_H
 #ifndef NDEBUG
 #include <stdlib.h>
 #define _CRTDBG_MAP_ALLOC

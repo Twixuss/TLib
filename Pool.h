@@ -1,5 +1,5 @@
-#ifndef _TLIB_BOUNDED_LIST_H
-#define _TLIB_BOUNDED_LIST_H
+#ifndef _TL_POOL_H
+#define _TL_POOL_H
 
 #include "Switches.h"
 #include "Exceptions.h"
