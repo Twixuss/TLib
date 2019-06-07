@@ -1,8 +1,8 @@
 #ifndef _TL_RANDOM_COLOR_H
 #define _TL_RANDOM_COLOR_H
 
-#include "Color.h"
-#include "Random.h"
+#include "TLColor.h"
+#include "TLRandom.h"
 
 namespace TLib
 {

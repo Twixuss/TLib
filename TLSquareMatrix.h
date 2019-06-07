@@ -1,7 +1,7 @@
 #ifndef _TL_SQUARE_MATRIX_H
 #define _TL_SQUARE_MATRIX_H
 
-#include "Exceptions.h"
+#include "TLExceptions.h"
 #include <iostream>
 
 namespace GG

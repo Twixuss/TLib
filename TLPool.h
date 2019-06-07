@@ -1,9 +1,9 @@
 #ifndef _TL_POOL_H
 #define _TL_POOL_H
 
-#include "Switches.h"
-#include "Exceptions.h"
-#include "Memory.h"
+#include "TLSwitches.h"
+#include "TLExceptions.h"
+#include "TLMemory.h"
 
 #include <stdlib.h>
 

@@ -1,6 +1,6 @@
 #ifndef _TL_MEMORY_H
 #define _TL_MEMORY_H
-#include "Switches.h"
+#include "TLSwitches.h"
 #if !defined NDEBUG && TL_CHECK_LEAKS == 1
 #include <stdlib.h>
 #define _CRTDBG_MAP_ALLOC

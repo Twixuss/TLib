@@ -1,9 +1,9 @@
 #ifndef _TL_LOGGER_H
 #define _TL_LOGGER_H
 
-#include "Attributes.h"
-
 #include <iostream>
+
+#include "TLAttributes.h"
 
 namespace TLib::Logger
 {

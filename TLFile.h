@@ -4,8 +4,10 @@
 #include <fstream>
 #include <vector>
 #include <functional>
-#include "String.h"
-#include "Exceptions.h"
+
+#include "TLString.h"
+#include "TLExceptions.h"
+
 namespace TLib
 {
    TL_CREATE_EXCEPTION( BadPath );

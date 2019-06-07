@@ -1,7 +1,7 @@
 #ifndef _TL_TIME_H
 #define _TL_TIME_H
 
-#include "Attributes.h"
+#include "TLAttributes.h"
 
 #if TL_IS_WINDOWS
 #include <Windows.h>

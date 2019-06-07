@@ -1,9 +1,10 @@
 #ifndef _TL_MATH_H
 #define _TL_MATH_H
 
-#include "Attributes.h"
 #include <type_traits>
 #include <cmath>
+
+#include "TLAttributes.h"
 
 namespace TLib::Math
 {

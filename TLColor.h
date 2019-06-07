@@ -1,7 +1,7 @@
 #ifndef _TL_COLOR_H
 #define _TL_COLOR_H
 
-#include "Attributes.h"
+#include "TLAttributes.h"
 
 namespace TLib
 {

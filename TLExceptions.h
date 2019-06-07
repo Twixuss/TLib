@@ -1,13 +1,13 @@
 #ifndef _TL_EXCEPTIONS_H
 #define _TL_EXCEPTIONS_H
 
-#include <exception>
+#include "TLSwitches.h"
 
-#include "Switches.h"
+#include <exception>
 
 #if TL_ALLOW_THROW
 
-#include "String.h"
+#include "TLString.h"
 
 
 #define TL_CREATE_EXCEPTION(name)                                                                 \

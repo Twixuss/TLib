@@ -1,10 +1,10 @@
 #ifndef _TL_VECTOR_H
 #define _TL_VECTOR_H
 
-#include "Attributes.h"
-#include "Switches.h"
-#include "Exceptions.h"
-#include "Math.h"
+#include "TLAttributes.h"
+#include "TLSwitches.h"
+#include "TLExceptions.h"
+#include "TLMath.h"
 
 #if TL_USE_SSE == 1
 #include <xmmintrin.h>
@@ -20,11 +20,11 @@ namespace TLib
    template<class Scalar> struct Matrix4x4;
 }
 
-#include "Vector2.inl"
-#include "Vector3.inl"
-#include "Vector4.inl"
-#include "Matrix3x3.inl"
-#include "Matrix4x4.inl"
+#include "TLVector2.inl"
+#include "TLVector3.inl"
+#include "TLVector4.inl"
+#include "TLMatrix3x3.inl"
+#include "TLMatrix4x4.inl"
 
 namespace TLib
 {

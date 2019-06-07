@@ -1,8 +1,8 @@
 #ifndef _TLIB_MONITOR_H
 #define _TLIB_MONITOR_H
 
-#include "Attributes.h"
-#include "Vector.h"
+#include "TLAttributes.h"
+#include "TLVector.h"
 #if TL_OS_IS_WINDOWS
 #include <Windows.h>
 namespace TLib
