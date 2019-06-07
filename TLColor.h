@@ -18,6 +18,22 @@ namespace TLib
       TL_CONSTEXPR Color() = default;
       TL_CONSTEXPR Color(FScalar v, FScalar a = {}) TL_NOEXCEPT : r(v), g(v), b(v), a(a) {}
       TL_CONSTEXPR Color(FScalar r, FScalar g, FScalar b, FScalar a = {}) TL_NOEXCEPT : r(r), g(g), b(b), a(a) {}
+      TL_NODISCARD TL_CONSTEXPR Scalar* Data() TL_NOEXCEPT
+      {
+         return &r;
+      }
+      TL_NODISCARD TL_CONSTEXPR const Scalar* Data() const TL_NOEXCEPT
+      {
+         return &r;
+      }
+      TL_NODISCARD TL_CONSTEXPR Scalar& operator[](unsigned i) TL_NOEXCEPT
+      {
+         return Data()[i];
+      }
+      TL_NODISCARD TL_CONSTEXPR const Scalar& operator[](unsigned i) const TL_NOEXCEPT
+      {
+         return Data()[i];
+      }
       TL_NODISCARD TL_CONSTEXPR Color operator+() TL_NOEXCEPT
       {
          return
@@ -28,7 +44,7 @@ namespace TLib
             +a
          };
       }
-      TL_NODISCARD TL_CONSTEXPR Color operator+() TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR Color operator-() TL_NOEXCEPT
       {
          return
          {
@@ -120,6 +136,7 @@ namespace TLib
       }
    };
    using Colorf = Color<float>;
+   using FColorf = const Colorf&;
 }
 
 #endif

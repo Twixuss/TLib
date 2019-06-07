@@ -173,6 +173,14 @@ namespace TLib
       {
          return a.x* b.x + a.y * b.y;
       }
+      TL_NODISCARD TL_CONSTEXPR Scalar Angle() const noexcept
+      {
+         auto dx = Dot(*this, Right());
+         if (y > 0)
+            return acos(dx);
+         else
+            return Math::Tau - acos(dx);
+      }
       TL_CONSTEXPR static Vector2 Right() TL_NOEXCEPT { return {1, 0}; }
       TL_CONSTEXPR static Vector2 Up() TL_NOEXCEPT { return {0, 1}; }
       template<typename T>

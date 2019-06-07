@@ -1,12 +1,15 @@
 #ifndef _TL_MEMORY_H
 #define _TL_MEMORY_H
-#ifndef NDEBUG
+#include "Switches.h"
+#if !defined NDEBUG && TL_CHECK_LEAKS == 1
 #include <stdlib.h>
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #define new new( _NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
 namespace TLib
 {
+#if !defined NDEBUG && TL_CHECK_LEAKS == 1
    struct MemoryLeakChecker
    {
       enum Output
@@ -15,7 +18,7 @@ namespace TLib
       };
       _CrtMemState _ms;
       Output o;
-      MemoryLeakChecker(Output mode) : o(mode)
+      MemoryLeakChecker(Output mode = StdOut) : o(mode)
       {
          _CrtMemCheckpoint(&_ms);
       }
@@ -33,27 +36,37 @@ namespace TLib
             break;
          }
          _CrtMemDumpAllObjectsSince(&_ms);
-         system("pause");
       }
    };
-}
 #else
-namespace TLib
-{
    struct MemoryLeakChecker
    {
       enum Output
       {
          StdOut, StdErr
       };
-      MemoryLeakChecker(Output mode)
+      MemoryLeakChecker(Output mode = StdOut)
       {
       }
       ~MemoryLeakChecker()
       {
       }
    };
-}
 #endif
-
+#pragma push_macro("new")
+#undef new
+   class Allocator
+   {
+   public:
+      virtual ~Allocator() = default;
+      virtual void* Allocate(size_t size) = 0;
+      template<class T, class ...Args>
+      T* Allocate(Args... args)
+      {
+         return new(Allocate(sizeof(T))) T(args...);
+      }
+      virtual void Deallocate(void* ptr) = 0;
+   };
+#pragma pop_macro("new")
+}
 #endif

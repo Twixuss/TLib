@@ -9,9 +9,9 @@
 #define TL_ALLOW_THROW 1
 #pragma message("TLib: TL_ALLOW_THROW is not defined. Defaulting to 1")
 #endif
-#ifndef TL_LOG_WINDOWS_TYPES
-#define TL_LOG_WINDOWS_TYPES 0
-#pragma message("TLib: TL_LOG_WINDOWS_TYPES is not defined. Defaulting to 0")
+#ifndef TL_CHECK_LEAKS
+#define TL_CHECK_LEAKS 0
+#pragma message("TLib: TL_CHECK_LEAKS is not defined. Defaulting to 0")
 #endif
 
 #endif

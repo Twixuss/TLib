@@ -18,17 +18,15 @@ namespace TLib::Logger
       Print(t);
       Print(r...);
    }
-#if TL_LOG_WINDOWS_TYPES
    struct WinMsg
    {
-      unsigned value;
-      WinMsg(unsigned value) : value(value)
-      {
-      }
+      UINT msg;
+      WPARAM wp;
+      LPARAM lp;
       template<class T>
       friend std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, WinMsg msg)
       {
-         switch (msg.value)
+         switch (msg.msg)
          {
 #define REGMSG(m) case m:os<<#m;break
             REGMSG(WM_CREATE);
@@ -194,9 +192,9 @@ namespace TLib::Logger
             REGMSG(WM_DWMNCRENDERINGCHANGED);
             REGMSG(WM_ENTERSIZEMOVE);
 #undef REGMSG
-         default:os<<msg.value; break;
+         default:os<<msg.msg; break;
          }
-         return os;
+         return os << ". WPARAM: " << std::hex << msg.wp << ". LPARAM: " << msg.lp << std::dec << '.';
       }
    };
    struct HResult
@@ -234,7 +232,6 @@ namespace TLib::Logger
          return str;
       }
    };
-#endif
 }
 
 #endif

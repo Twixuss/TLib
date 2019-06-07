@@ -3,27 +3,23 @@
 
 #pragma region -----[ Operating systems ]-----
 
-#define TL_OS_WINDOWS_32 0x1
-#define TL_OS_WINDOWS_64 0x2
-#define TL_OS_LINUX      0x4
-#define TL_OS_MAC        0x8
-
-#define TL_OS_WINDOWS    (TL_OS_WINDOWS_32 | TL_OS_WINDOWS_64)
-
 #if defined _WIN32
   #ifdef _WIN64
-    #define TL_OS TL_OS_WINDOWS_64
+    #define TL_OS_IS_WINDOWS_64 1
+    #define TL_OS_IS_WINDOWS_32 0
   #else
-    #define TL_OS TL_OS_WINDOWS_32
+    #define TL_OS_IS_WINDOWS_64 0
+    #define TL_OS_IS_WINDOWS_32 1
   #endif
+  #define TL_OS_IS_LINUX 0
+  #define TL_OS_IS_MAC 0
 #elif defined LINUX || defined __linux__
   #define TL_OS TL_OS_LINUX
 #else
   #error Unresolved OS
 #endif
 
-#define TL_OS_IS(os) (TL_OS & os)
-#define TL_IS_WINDOWS TL_OS_IS(TL_OS_WINDOWS)
+#define TL_OS_IS_WINDOWS (TL_OS_IS_WINDOWS_64 | TL_OS_IS_WINDOWS_32)
 
 #pragma endregion
 

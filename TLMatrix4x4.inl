@@ -98,15 +98,19 @@ namespace TLib
             0, 0, 0, 1
          };
       }
-      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Translation(FVector3 v) noexcept
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Translation(FScalar x, FScalar y, FScalar z = {}) noexcept
       {
          return
          {
-             1 ,  0 ,  0 , 0,
-             0 ,  1 ,  0 , 0,
-             0 ,  0 ,  1 , 0,
-            v.x, v.y, v.z, 1
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            x, y, z, 1
          };
+      }
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Translation(FVector3 v) noexcept
+      {
+         return Translation(v.x, v.y, v.z);
       }
       TL_NODISCARD TL_CONSTEXPR static Matrix4x4 RotationX(FScalar a) noexcept
       {
@@ -148,15 +152,23 @@ namespace TLib
       {
          return (RotationZ(v.z) * RotationX(v.x))* RotationY(v.y);
       }
-      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Scaling(FVector4 v) noexcept
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Scaling(FScalar x, FScalar y, FScalar z = (Scalar)1) noexcept
       {
          return
          {
-            v.x,  0 ,  0 , 0,
-             0 , v.y,  0 , 0,
-             0 ,  0 , v.z, 0,
-             0 ,  0 ,  0 , 1
+            x, 0, 0, 0,
+            0, y, 0, 0,
+            0, 0, z, 0,
+            0, 0, 0, 1
          };
+      }
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Scaling(FVector4 v) noexcept
+      {
+         return Scaling(v.x, v.y, v.z);
+      }
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Orthographic(FScalar x, FScalar y, FScalar w, FScalar h) noexcept
+      {
+         return Translation(-1.0f, -1.0f) * Scaling(1.0f / w * 2.0f, 1.0f / h * 2.0f);
       }
       TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Perspective(FScalar fov, FScalar aspect, FScalar nz, FScalar fz) noexcept
       {
@@ -170,6 +182,14 @@ namespace TLib
             0, 0,   fzdfmn   , 1,
             0, 0,-fzdfmn * nz, 0
          };
+      }
+      TL_NODISCARD TL_CONSTEXPR Matrix4x4& operator*=(FMatrix4x4 m)
+      {
+         i = m * i;
+         j = m * j;
+         k = m * k;
+         l = m * l;
+         return *this;
       }
       TL_NODISCARD TL_CONSTEXPR friend Vector4 operator*(FMatrix4x4 a, FVector4 b) noexcept
       {

@@ -10,13 +10,15 @@ namespace TLib
 {
    TL_CREATE_EXCEPTION( BadPath );
    template<class PathType>
-   std::string ReadFileContents( PathType&& path ) noexcept
+   std::vector<char> ReadFileContents( PathType&& path ) noexcept
    {
-      std::ifstream stream{ std::forward<PathType>( path ) };
-      if ( !stream.is_open() )
-         return "";
-      std::string contents{ std::istreambuf_iterator<char>{ stream }, std::istreambuf_iterator<char>{} };
-      return contents;
+      std::ifstream t(path, std::ios::binary);
+      t.seekg(0, std::ios::end);
+      size_t size = t.tellg();
+      t.seekg(0);
+      std::vector<char> buffer(size);
+      t.read(buffer.data(), size);
+      return buffer;
    }
    class TokenReader
    {

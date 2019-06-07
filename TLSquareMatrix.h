@@ -1,7 +1,7 @@
 #ifndef _TL_SQUARE_MATRIX_H
 #define _TL_SQUARE_MATRIX_H
 
-#include <cassert>
+#include "Exceptions.h"
 #include <iostream>
 
 namespace GG
@@ -17,7 +17,7 @@ namespace GG
          m_Size( size ),
          m_Arr( new Scalar[m_Size * m_Size]{} )
       {
-         assert( size > 1 && "Why not use just one scalar?" );
+         TL_ASSERT( size > 1 && "Why not use just one scalar?" );
       }
       SquareMatrix( FSquareMatrix other ) noexcept :
          m_Size( other.m_Size ),
@@ -42,22 +42,22 @@ namespace GG
       }
       Scalar& operator[]( unsigned i ) noexcept
       {
-         assert( i < m_Size * m_Size );
+         TL_ASSERT( i < m_Size * m_Size );
          return m_Arr[i];
       }
       const Scalar& operator[]( unsigned i ) const noexcept
       {
-         assert( i < m_Size * m_Size );
+         TL_ASSERT( i < m_Size * m_Size );
          return m_Arr[i];
       }
       Scalar& Get( unsigned x, unsigned y ) noexcept
       {
-         assert( y * m_Size + x );
+         TL_ASSERT( y * m_Size + x );
          return m_Arr[y * m_Size + x];
       }
       const Scalar& Get( unsigned x, unsigned y ) const noexcept
       {
-         assert( y * m_Size + x );
+         TL_ASSERT( y * m_Size + x );
          return m_Arr[y * m_Size + x];
       }
       Scalar Determinant() const noexcept
@@ -119,21 +119,21 @@ namespace GG
       }
       friend SquareMatrix operator+( FSquareMatrix a, FSquareMatrix b ) noexcept
       {
-         assert( a.m_Size == b.m_Size );
+         TL_ASSERT( a.m_Size == b.m_Size );
          SquareMatrix ret( a.m_Size );
          for ( int i = 0; i < m_Size * m_Size; i++ )
             ret[i] = a[i] + b[i];
       }
       friend SquareMatrix operator-( FSquareMatrix a, FSquareMatrix b ) noexcept
       {
-         assert( a.m_Size == b.m_Size );
+         TL_ASSERT( a.m_Size == b.m_Size );
          SquareMatrix ret( a.m_Size );
          for ( int i = 0; i < m_Size * m_Size; i++ )
             ret[i] = a[i] - b[i];
       }
       friend SquareMatrix operator*( FSquareMatrix a, FSquareMatrix b ) noexcept
       {
-         assert( a.m_Size == b.m_Size );
+         TL_ASSERT( a.m_Size == b.m_Size );
          SquareMatrix ret( a.m_Size );
 
          for ( int i = 0; i < ret.m_Size * ret.m_Size; i += ret.m_Size )
