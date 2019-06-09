@@ -84,6 +84,16 @@ namespace TLib::Math
    {
       return t < min ? min : t > max ? max : t;
    }
+   template<class T>
+   [[nodiscard]] constexpr T Map(const T& value, const T& smin, const T& smax, const T& dmin, const T& dmax)
+   {
+      return (value - smin) / (smax - smin) * (dmax - dmin) + dmin;
+   }
+   template<class T, class TI>
+   [[nodiscard]] constexpr T Lerp(const T& a, const T& b, TI t)
+   {
+      return a + (b - a) * t;
+   }
 }
 
 #endif
