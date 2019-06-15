@@ -143,14 +143,14 @@ namespace TLib
          };
       }
       //Roll, Pitch, Yaw (ZXY)
-      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 RotationZXY(FVector4 v) noexcept
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 RotationZXY(FScalar x, FScalar y, FScalar z) noexcept
       {
-         return (RotationY(v.y) * RotationX(v.x))* RotationZ(v.z);
+         return (RotationY(y) * RotationX(x))* RotationZ(z);
       }
       //Yaw, Pitch, Roll (YXZ)
-      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 RotationYXZ(FVector4 v) noexcept
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 RotationYXZ(FScalar x, FScalar y, FScalar z) noexcept
       {
-         return (RotationZ(v.z) * RotationX(v.x))* RotationY(v.y);
+         return (RotationZ(z) * RotationX(x))* RotationY(y);
       }
       TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Scaling(FScalar x, FScalar y, FScalar z = (Scalar)1) noexcept
       {
@@ -162,13 +162,19 @@ namespace TLib
             0, 0, 0, 1
          };
       }
-      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Scaling(FVector4 v) noexcept
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Orthographic(FScalar w, FScalar h, FScalar nearZ, FScalar farZ)
       {
-         return Scaling(v.x, v.y, v.z);
-      }
-      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Orthographic(FScalar x, FScalar y, FScalar w, FScalar h) noexcept
-      {
-         return Translation(-1.0f, -1.0f) * Scaling(1.0f / w * 2.0f, 1.0f / h * 2.0f);
+         TL_ASSERT(!Math::Equal<Scalar>(w,    (Scalar)0.0, (Scalar)0.00001));
+         TL_ASSERT(!Math::Equal<Scalar>(h,    (Scalar)0.0, (Scalar)0.00001));
+         TL_ASSERT(!Math::Equal<Scalar>(farZ, nearZ,       (Scalar)0.00001));
+         Scalar range = 1.0 / (farZ-nearZ);
+         return 
+         {
+            2 / w, 0,    0,     0,
+            0,     2 / h,0,     0,
+            0,     0,    range, -range * nearZ,
+            0,     0,    0,     1,
+         };
       }
       TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Perspective(FScalar fov, FScalar aspect, FScalar nz, FScalar fz) noexcept
       {

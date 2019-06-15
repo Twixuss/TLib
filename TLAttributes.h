@@ -115,4 +115,10 @@
   #define TL_STATIC_ASSERT(...) static_assert(__VA_ARGS__)
 #endif
 
+#define TL_ENUM_OVERLOAD_BINV(type) type operator~(type a) { return (type)(~(unsigned)a); }
+#define TL_ENUM_OVERLOAD_BOR(type) type operator|(type a, type b) { return (type)((unsigned)a | (unsigned)b); }
+#define TL_ENUM_OVERLOAD_BAND(type) type operator&(type a, type b) { return (type)((unsigned)a & (unsigned)b); }
+
+#define TL_ENUM_OVERLOAD(type) TL_ENUM_OVERLOAD_BINV(type) TL_ENUM_OVERLOAD_BOR(type) TL_ENUM_OVERLOAD_BAND(type)
+
 #endif

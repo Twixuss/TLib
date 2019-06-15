@@ -31,8 +31,10 @@ namespace TLib
    TL_CREATE_EXCEPTION(OutOfMemory);
 }
 
-#define TL_ASSERT(x) if(!(x))throw AssertionFailedException(#x)
-#define TL_ASSERT_MSG(x, ...) if(!(x))throw AssertionFailedException(#x, __VA_ARGS__)
+#define TL_THROW(type,...) do{__debugbreak();throw type("File: " __FILE__ "\nLine: " TL_STRINGA(__LINE__) "\n", __VA_ARGS__);}while(0)
+
+#define TL_ASSERT(x) if(!(x))TL_THROW(AssertionFailedException,#x)
+#define TL_ASSERT_MSG(x, ...) if(!(x))TL_THROW(AssertionFailedException,#x, __VA_ARGS__)
 
 #endif /* TL_ALLOW_THROW */
 

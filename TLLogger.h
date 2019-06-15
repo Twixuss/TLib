@@ -12,6 +12,29 @@ namespace TLib::Logger
    {
       std::cout << t;
    }
+#if TL_OS_IS_WINDOWS
+   namespace Color
+   {
+      struct Type { unsigned val; };
+      constexpr Type Black{0};
+      constexpr Type DarkBlue{1};
+      constexpr Type DarkGreen{2};
+      constexpr Type DarkCyan{3};
+      constexpr Type DarkRed{4};
+      constexpr Type DarkMagenta{5};
+      constexpr Type DarkYellow{6};
+      constexpr Type Gray{7};
+      constexpr Type DarkGray{8};
+      constexpr Type Blue{9};
+      constexpr Type Green{10};
+      constexpr Type Cyan{11};
+      constexpr Type Red{12};
+      constexpr Type Magenta{13};
+      constexpr Type Yellow{14};
+      constexpr Type White{15};
+   }
+   inline void Print(Color::Type t) { SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), t.val); }
+#endif
    template<typename T, typename ... R>
    inline void Print(const T& t, const R&... r)
    {
