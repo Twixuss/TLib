@@ -152,6 +152,14 @@ namespace TLib
       {
          return (RotationZ(z) * RotationX(x))* RotationY(y);
       }
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 RotationZXY(FVector4 v) noexcept
+      {
+         return RotationZXY(v.x, v.y, v.z);
+      }
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 RotationYXZ(FVector4 v) noexcept
+      {
+         return RotationYXZ(v.x, v.y, v.z);
+      }
       TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Scaling(FScalar x, FScalar y, FScalar z = (Scalar)1) noexcept
       {
          return

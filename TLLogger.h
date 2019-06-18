@@ -220,6 +220,41 @@ namespace TLib::Logger
          return os << ". WPARAM: " << std::hex << msg.wp << ". LPARAM: " << msg.lp << std::dec << '.';
       }
    };
+   struct WinSysCmd
+   {
+      WPARAM wp;
+      template<class T>
+      friend std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, WinSysCmd msg)
+      {
+         switch (msg.wp)
+         {
+#define REGMSG(m) case m:os<<#m;break
+            REGMSG(SC_SIZE);
+            REGMSG(SC_MOVE);
+            REGMSG(SC_MINIMIZE);
+            REGMSG(SC_MAXIMIZE);
+            REGMSG(SC_NEXTWINDOW);
+            REGMSG(SC_PREVWINDOW);
+            REGMSG(SC_CLOSE);
+            REGMSG(SC_VSCROLL);
+            REGMSG(SC_HSCROLL);
+            REGMSG(SC_MOUSEMENU);
+            REGMSG(SC_KEYMENU);
+            REGMSG(SC_ARRANGE);
+            REGMSG(SC_RESTORE);
+            REGMSG(SC_TASKLIST);
+            REGMSG(SC_SCREENSAVE);
+            REGMSG(SC_HOTKEY);
+            REGMSG(SC_DEFAULT);
+            REGMSG(SC_MONITORPOWER);
+            REGMSG(SC_CONTEXTHELP);
+            REGMSG(SC_SEPARATOR);
+#undef REGMSG
+         default:os<<msg.wp; break;
+         }
+         return os;
+      }
+   };
    struct HResult
    {
       HResult(long value) : value(value)
