@@ -47,6 +47,13 @@ namespace TLib
       {
          return (Vector2<ConvertTo>)* this / Magnitude<ConvertTo>();
       }
+      TL_NODISCARD TL_CONSTEXPR Vector2 Clamped(FScalar val) const TL_NOEXCEPT
+      {
+         auto ret = *this;
+         if (ret.Magnitude() > val)
+            return ret.Normalized() * val;
+         return ret;
+      }
       TL_NODISCARD TL_CONSTEXPR Scalar* Data() TL_NOEXCEPT
       {
          return scl;

@@ -48,6 +48,13 @@ namespace TLib
             TL_THROW(DivideByZeroException);
          return (Vector4<ConvertTo>) * this / magnitude;
       }
+      TL_NODISCARD TL_CONSTEXPR Vector4 Clamped(FScalar val) const TL_NOEXCEPT
+      {
+         auto ret = *this;
+         if (ret.Magnitude() > val)
+            return ret.Normalized() * val;
+         return ret;
+      }
       TL_NODISCARD TL_CONSTEXPR Scalar* Data() TL_NOEXCEPT
       {
          return &x;

@@ -108,7 +108,7 @@ namespace TLib
             x, y, z, 1
          };
       }
-      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Translation(FVector3 v) noexcept
+      TL_NODISCARD TL_CONSTEXPR static Matrix4x4 Translation(FVector4 v) noexcept
       {
          return Translation(v.x, v.y, v.z);
       }

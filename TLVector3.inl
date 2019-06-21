@@ -68,6 +68,13 @@ namespace TLib
       {
          return (Vector3<ConvertTo>)* this / Magnitude<ConvertTo>();
       }
+      TL_NODISCARD TL_CONSTEXPR Vector3 Clamped(FScalar val) const TL_NOEXCEPT
+      {
+         auto ret = *this;
+         if (ret.Magnitude() > val)
+            return ret.Normalized() * val;
+         return ret;
+      }
       TL_NODISCARD TL_CONSTEXPR Vector3 ProjectedOn(FVector3 v) const TL_NOEXCEPT
       {
          return v * Dot(*this, v);
