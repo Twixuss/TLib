@@ -4,21 +4,25 @@ namespace TLib
    struct Vector4
    {
       using Scalar = TScalar;
+      using FScalar = const Scalar&;
       using Vector2 = Vector2<Scalar>;
       using Vector3 = Vector3<Scalar>;
+      using FVector2 = const Vector2&;
+      using FVector3 = const Vector3&;
+      using FVector4 = const Vector4&;
       Scalar x{};
       Scalar y{};
       Scalar z{};
       Scalar w{};
       TL_CONSTEXPR Vector4() = default;
-      TL_CONSTEXPR Vector4(Scalar v) TL_NOEXCEPT : x(v), y(v), z(v), w(v) {}
-      TL_CONSTEXPR Vector4(Scalar x, Scalar y, Scalar z = {}, Scalar w = {}) TL_NOEXCEPT : x(x), y(y), z(z), w(w) {}
-      TL_CONSTEXPR Vector4(Vector2 a, Vector2 b = {}) TL_NOEXCEPT : x(a.x), y(a.y), z(b.x), w(b.y) {}
-      TL_CONSTEXPR Vector4(Vector2 v, Scalar z, Scalar w = {}) TL_NOEXCEPT : x(v.x), y(v.y), z(z), w(w) {}
-      TL_CONSTEXPR Vector4(Scalar x, Vector2 v, Scalar w = {}) TL_NOEXCEPT : x(x), y(v.x), z(v.y), w(w) {}
-      TL_CONSTEXPR Vector4(Scalar x, Scalar y, Vector2 v) TL_NOEXCEPT : x(x), y(y), z(v.x), w(v.y) {}
-      TL_CONSTEXPR Vector4(Vector3 v, Scalar w = {}) TL_NOEXCEPT : x(v.x), y(v.y), z(v.z), w(w) {}
-      TL_CONSTEXPR Vector4(Scalar x, Vector3 v) TL_NOEXCEPT : x(x), y(v.x), z(v.y), w(v.z) {}
+      TL_CONSTEXPR Vector4(FScalar v) TL_NOEXCEPT : x(v), y(v), z(v), w(v) {}
+      TL_CONSTEXPR Vector4(FScalar x, FScalar y, FScalar z = {}, FScalar w = {}) TL_NOEXCEPT : x(x), y(y), z(z), w(w) {}
+      TL_CONSTEXPR Vector4(FVector2 a, FVector2 b = {}) TL_NOEXCEPT : x(a.x), y(a.y), z(b.x), w(b.y) {}
+      TL_CONSTEXPR Vector4(FVector2 v, FScalar z, FScalar w = {}) TL_NOEXCEPT : x(v.x), y(v.y), z(z), w(w) {}
+      TL_CONSTEXPR Vector4(FScalar x, FVector2 v, FScalar w = {}) TL_NOEXCEPT : x(x), y(v.x), z(v.y), w(w) {}
+      TL_CONSTEXPR Vector4(FScalar x, FScalar y, FVector2 v) TL_NOEXCEPT : x(x), y(y), z(v.x), w(v.y) {}
+      TL_CONSTEXPR Vector4(FVector3 v, FScalar w = {}) TL_NOEXCEPT : x(v.x), y(v.y), z(v.z), w(w) {}
+      TL_CONSTEXPR Vector4(FScalar x, FVector3 v) TL_NOEXCEPT : x(x), y(v.x), z(v.y), w(v.z) {}
       TL_CONSTEXPR Vector4(const Vector4&) = default;
       TL_CONSTEXPR Vector4(Vector4&&) = default;
       template<class Other>
@@ -371,7 +375,7 @@ namespace TLib
       {
          return {-x,-y,-z,-w};
       }
-      TL_CONSTEXPR Vector4& operator+=(Vector4 v) TL_NOEXCEPT
+      TL_CONSTEXPR Vector4& operator+=(FVector4 v) TL_NOEXCEPT
       {
          x += v.x;
          y += v.y;
@@ -379,7 +383,7 @@ namespace TLib
          w += v.w;
          return *this;
       }
-      TL_CONSTEXPR Vector4& operator-=(Vector4 v) TL_NOEXCEPT
+      TL_CONSTEXPR Vector4& operator-=(FVector4 v) TL_NOEXCEPT
       {
          x -= v.x;
          y -= v.y;
@@ -387,7 +391,7 @@ namespace TLib
          w -= v.w;
          return *this;
       }
-      TL_CONSTEXPR Vector4& operator*=(Vector4 v) TL_NOEXCEPT
+      TL_CONSTEXPR Vector4& operator*=(FVector4 v) TL_NOEXCEPT
       {
          x *= v.x;
          y *= v.y;
@@ -395,7 +399,7 @@ namespace TLib
          w *= v.w;
          return *this;
       }
-      TL_CONSTEXPR Vector4& operator/=(Vector4 v) TL_NOEXCEPT
+      TL_CONSTEXPR Vector4& operator/=(FVector4 v) TL_NOEXCEPT
       {
          x /= v.x;
          y /= v.y;
@@ -403,7 +407,7 @@ namespace TLib
          w /= v.w;
          return *this;
       }
-      TL_NODISCARD TL_CONSTEXPR friend Vector4 operator+(Vector4 a, Vector4 b) TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR friend Vector4 operator+(FVector4 a, FVector4 b) TL_NOEXCEPT
       {
          return
          {
@@ -413,7 +417,7 @@ namespace TLib
             a.w + b.w,
          };
       }
-      TL_NODISCARD TL_CONSTEXPR friend Vector4 operator-(Vector4 a, Vector4 b) TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR friend Vector4 operator-(FVector4 a, FVector4 b) TL_NOEXCEPT
       {
          return
          {
@@ -423,7 +427,7 @@ namespace TLib
             a.w - b.w,
          };
       }
-      TL_NODISCARD TL_CONSTEXPR friend Vector4 operator*(Vector4 a, Vector4 b) TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR friend Vector4 operator*(FVector4 a, FVector4 b) TL_NOEXCEPT
       {
          return
          {
@@ -433,7 +437,7 @@ namespace TLib
             a.w * b.w,
          };
       }
-      TL_NODISCARD TL_CONSTEXPR friend Vector4 operator/(Vector4 a, Vector4 b) TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR friend Vector4 operator/(FVector4 a, FVector4 b) TL_NOEXCEPT
       {
          return
          {
@@ -443,15 +447,15 @@ namespace TLib
             a.w / b.w,
          };
       }
-      TL_NODISCARD TL_CONSTEXPR friend bool operator==(Vector4 a, Vector4 b) TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR friend bool operator==(FVector4 a, FVector4 b) TL_NOEXCEPT
       {
          return a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w;
       }
-      TL_NODISCARD TL_CONSTEXPR friend bool operator!=(Vector4 a, Vector4 b) TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR friend bool operator!=(FVector4 a, FVector4 b) TL_NOEXCEPT
       {
          return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
       }
-      TL_NODISCARD TL_CONSTEXPR static bool Equal(Vector4 a, Vector4 b, Scalar epsilon) TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR static bool Equal(FVector4 a, FVector4 b, FScalar epsilon) TL_NOEXCEPT
       {
          return (
             Math::Abs(a.x - b.x) < epsilon &&
@@ -459,14 +463,9 @@ namespace TLib
             Math::Abs(a.z - b.z) < epsilon &&
             Math::Abs(a.w - b.w) < epsilon);
       }
-      TL_NODISCARD TL_CONSTEXPR static Scalar Dot(Vector4 a, Vector4 b) TL_NOEXCEPT
+      TL_NODISCARD TL_CONSTEXPR static Scalar Dot(FVector4 a, FVector4 b) TL_NOEXCEPT
       {
          return a.x* b.x + a.y * b.y + a.z * b.z + a.w * b.w;
-      }
-      template<typename T>
-      friend std::basic_ostream<T>& operator<<(std::basic_ostream<T> & s, Vector4 v) TL_NOEXCEPT
-      {
-         return s << '[' << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ']';
       }
    };
 }

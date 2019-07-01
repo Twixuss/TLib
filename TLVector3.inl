@@ -315,10 +315,5 @@ namespace TLib
       TL_NODISCARD TL_CONSTEXPR static Vector3 Right() TL_NOEXCEPT { return {1, 0, 0}; }
       TL_NODISCARD TL_CONSTEXPR static Vector3 Up() TL_NOEXCEPT { return {0, 1, 0}; }
       TL_NODISCARD TL_CONSTEXPR static Vector3 Forward() TL_NOEXCEPT { return {0, 0, 1}; }
-      template<typename T>
-      friend std::basic_ostream<T>& operator<<(std::basic_ostream<T> & s, FVector3 v) TL_NOEXCEPT
-      {
-         return s << '[' << v.x << ", " << v.y << ", " << v.z << ']';
-      }
    };
 }

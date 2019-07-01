@@ -190,10 +190,5 @@ namespace TLib
       }
       TL_CONSTEXPR static Vector2 Right() TL_NOEXCEPT { return {1, 0}; }
       TL_CONSTEXPR static Vector2 Up() TL_NOEXCEPT { return {0, 1}; }
-      template<typename T>
-      friend std::basic_ostream<T>& operator<<(std::basic_ostream<T> & s, FVector2 v) TL_NOEXCEPT
-      {
-         return s << '[' << v.x << ", " << v.y << ']';
-      }
    };
 }

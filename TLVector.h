@@ -31,6 +31,12 @@ namespace TLib
 
 namespace TLib
 {
+   template<class T> using FVector2 = const Vector2<T>&;
+   template<class T> using FVector3 = const Vector3<T>&;
+   template<class T> using FVector4 = const Vector4<T>&;
+   template<class T> using FMatrix3x3 = const Matrix3x3<T>&;
+   template<class T> using FMatrix4x4 = const Matrix4x4<T>&;
+
    using Vec2f = Vector2<float>;
    using Vec3f = Vector3<float>;
    using Vec4f = Vector4<float>;
@@ -72,6 +78,7 @@ namespace TLib
    using Vec4ll = Vector4<long long>;
    using Mat3x3ll = Matrix3x3<long long>;
    using Mat4x4ll = Matrix4x4<long long>;
+
    namespace Math
    {
       template<class Scalar>

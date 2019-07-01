@@ -1,16 +1,37 @@
 #ifndef _TL_LOGGER_H
 #define _TL_LOGGER_H
 
-#include <iostream>
+#include <stdio.h>
+#include <string>
 
 #include "TLAttributes.h"
 
 namespace TLib::Logger
 {
+   inline void Print(const wchar_t* v)       { ::wprintf(v); }
+   inline void Print(const char* v)          { ::printf(v); }
+   inline void Print(const unsigned char* v) { ::printf((const char*)v); }
+   inline void Print(char v)                 { ::printf("%c", v); }
+   inline void Print(unsigned char v)        { ::printf("%c", v); }
+   inline void Print(int v)                  { ::printf("%i", v); }
+   inline void Print(unsigned v)             { ::printf("%u", v); }
+   inline void Print(float v)                { ::printf("%f", v); }
+   inline void Print(const std::string& v)   { ::printf(v.data()); }
+   template<size_t S>
+   inline void Print(const char(&msg)[S])
+   {
+      ::printf(msg);
+   }
    template<typename T>
    inline void Print(const T& t)
    {
-      std::cout << t;
+      ::printf(::TLib::ToString(t).data());
+   }
+   template<typename T, typename ... R>
+   inline void Print(const T& t, const R& ... r)
+   {
+      Print(t);
+      Print(r...);
    }
 #if TL_OS_IS_WINDOWS
    namespace Color
@@ -35,12 +56,6 @@ namespace TLib::Logger
    }
    inline void Print(Color::Type t) { SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), t.val); }
 #endif
-   template<typename T, typename ... R>
-   inline void Print(const T& t, const R&... r)
-   {
-      Print(t);
-      Print(r...);
-   }
    struct WinMsg
    {
       UINT msg;
@@ -215,7 +230,7 @@ namespace TLib::Logger
             REGMSG(WM_DWMNCRENDERINGCHANGED);
             REGMSG(WM_ENTERSIZEMOVE);
 #undef REGMSG
-         default:os<<msg.msg; break;
+         default:os << msg.msg; break;
          }
          return os << ". WPARAM: " << std::hex << msg.wp << ". LPARAM: " << msg.lp << std::dec << '.';
       }
@@ -250,7 +265,7 @@ namespace TLib::Logger
             REGMSG(SC_CONTEXTHELP);
             REGMSG(SC_SEPARATOR);
 #undef REGMSG
-         default:os<<msg.wp; break;
+         default:os << msg.wp; break;
          }
          return os;
       }
@@ -274,11 +289,11 @@ namespace TLib::Logger
                                     FORMAT_MESSAGE_FROM_SYSTEM |
                                     FORMAT_MESSAGE_IGNORE_INSERTS,
                                     nullptr,
-                                    value, 
+                                    value,
                                     MAKELANGID(LANG_NEUTRAL,
                                                SUBLANG_DEFAULT),
-                                               (char*)&msg,
-                                    0, 
+                                               (char*)& msg,
+                                    0,
                                     nullptr);
          if (len != 0)
          {
