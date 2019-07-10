@@ -81,11 +81,11 @@ namespace TLib
       }
       TL_NODISCARD TL_CONSTEXPR Scalar* Data() TL_NOEXCEPT
       {
-         return scl;
+         return &x;
       }
       TL_NODISCARD TL_CONSTEXPR const Scalar* Data() const TL_NOEXCEPT
       {
-         return scl;
+         return &x;
       }
       TL_NODISCARD TL_CONSTEXPR Scalar& operator[](unsigned i) TL_NOEXCEPT
       {
